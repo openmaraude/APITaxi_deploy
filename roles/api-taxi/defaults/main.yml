@@ -12,3 +12,8 @@ api_taxi_repositories: [
     "git+https://github.com/openmaraude/APITaxi_models.git@{{ api_taxi_models_version }}",
     "git+https://github.com/openmaraude/APITaxi.git@{{ api_taxi_version }}"
 ]
+
+api_taxi_virtualenv: /opt/api-taxi
+
+# If set, virtualenv is recreated
+api_taxi_recreate_virtualenv: false

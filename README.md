@@ -25,3 +25,9 @@ $> echo "test-deploy ansible_connection=docker" > inventory.ini
 $> ansible-playbook -i inventory.ini bootstrap.yml
 $> ansible-playbook -i inventory.ini deploy-api-taxi.yml
 ```
+
+Default variable in `roles/<role>/defaults/main.yml` can be overriden. For example, to force the virtualenv creation, use:
+
+```
+$> ansible-playbook -i inventary.ini deploy-api-taxi.yml -e '{api_taxi_recreate_virtualenv: true}'
+```

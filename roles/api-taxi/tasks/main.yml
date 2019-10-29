@@ -16,7 +16,13 @@
     "libpq-dev"
   ]
 
-- name: Install APITaxi packages in virtualenv /opt/api-taxi - {{ api_taxi_repositories }}
+- name: Remove virtualenv {{ api_taxi_virtualenv }}
+  file:
+    state: absent
+    path: "{{ api_taxi_virtualenv }}"
+  when: api_taxi_recreate_virtualenv
+
+- name: Install APITaxi packages in virtualenv {{ api_taxi_virtualenv }} - {{ api_taxi_repositories }}
   pip:
     name: "{{ api_taxi_repositories }}"
-    virtualenv: /opt/api-taxi
+    virtualenv: "{{ api_taxi_virtualenv }}"
