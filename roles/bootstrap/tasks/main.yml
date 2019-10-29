@@ -1,0 +1,20 @@
+---
+# Ansible requires:
+# - python
+# - sudo: for become=yes
+# - aptitude: to install packages. Ansible automaticalluy.
+
+- name: Install python3
+  raw: bash -c "test -e /usr/bin/python3 || (apt -qqy update && apt install -qqy python3-minimal)"
+  register: output
+  changed_when: output.stdout
+
+- name: Install aptitude
+  raw: bash -c "test -e /usr/bin/aptitude || (apt -qqy update && apt install -qqy python3-apt aptitude)"
+  register: output
+  changed_when: output.stdout
+
+- name: Install sudo
+  package:
+    name: sudo
+    update_cache: false
