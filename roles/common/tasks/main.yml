@@ -1,0 +1,8 @@
+---
+
+- name: Install common packages
+  package:
+    name: [
+      "procps",
+      "strace"
+   ]
