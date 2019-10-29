@@ -1,0 +1,9 @@
+---
+- name: Deploy API taxi
+
+  hosts: '*'
+  gather_facts: false
+  become: yes
+
+  roles:
+    - api-taxi

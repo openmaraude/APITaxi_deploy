@@ -1,0 +1,14 @@
+---
+
+api_taxi_all_versions: master
+
+api_taxi_utils_version: "{{ api_taxi_all_versions }}"
+api_taxi_models_version: "{{ api_taxi_all_versions }}"
+api_taxi_version: "{{ api_taxi_all_versions }}"
+
+# Software versions to deploy
+api_taxi_repositories: [
+    "git+https://github.com/openmaraude/APITaxi_utils.git@{{ api_taxi_utils_version }}",
+    "git+https://github.com/openmaraude/APITaxi_models.git@{{ api_taxi_models_version }}",
+    "git+https://github.com/openmaraude/APITaxi.git@{{ api_taxi_version }}"
+]

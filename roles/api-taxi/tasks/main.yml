@@ -1,0 +1,22 @@
+---
+
+- name: Install Python dependencies
+  package:
+    name: [
+      "python-virtualenv",
+      "python3-pip",
+      "git"
+     ]
+
+- name: Install APITaxi dependencies
+  package:
+    name: [
+    "libffi-dev",
+    "libgeos-dev",
+    "libpq-dev"
+  ]
+
+- name: Install APITaxi packages in virtualenv /opt/api-taxi - {{ api_taxi_repositories }}
+  pip:
+    name: "{{ api_taxi_repositories }}"
+    virtualenv: /opt/api-taxi
