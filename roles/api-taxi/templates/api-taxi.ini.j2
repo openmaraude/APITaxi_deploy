@@ -1,0 +1,8 @@
+[uwsgi]
+
+master = true
+processes = 12
+virtualenv = /opt/api-taxi
+plugin = python3
+module = APITaxi:create_app()
+http-socket = 127.0.0.1:5000
