@@ -4,5 +4,8 @@
   package:
     name: [
       "procps",
-      "strace"
+      "strace",
+      "vim",
+      "screen",
+      "curl"
    ]
