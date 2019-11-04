@@ -1,33 +1,46 @@
-APITaxi_deploy gathers a set of Ansible playbook to deploy the infrastructure behind APITaxi.
+Ansible playbooks to deploy the infrastructure behind APITaxi.
 
+# Requirements
 
-USAGE
-=====
-
-Install Ansible:
+Install ansible on your computer:
 
 ```
 # OSX
 $> brew install ansible
 
-# Ubuntu/debian
-$> apt-get install ansible
+# Debian/Ubuntu
+$> apt-get install -y ansible
 ```
 
-The easiest way to test a playbook is to run it into a Docker container.
+# Playbooks
+
+## bootstrap.yml
+
+Install required packages to run ansible on a Debian/Ubuntu server.
+
+#### Usage example
 
 ```
-# Create the container
-$> docker run --rm -ti --name test-deploy bash
+# To test locally, create a Docker container
+$> docker run --rm -ti --name deploy debian
 
 # From another shell, create the inventory file and run the playbook
-$> echo "test-deploy ansible_connection=docker" > inventory.ini
+$> echo "deploy ansible_connection=docker" > inventory.ini
 $> ansible-playbook -i inventory.ini bootstrap.yml
-$> ansible-playbook -i inventory.ini deploy-api-taxi.yml
 ```
 
-Default variable in `roles/<role>/defaults/main.yml` can be overriden. For example, to force the virtualenv creation, use:
+## common.yml
+
+Install useful packages for any server. For example `ps`, `lsof`, `strace`, `curl`, ...
+
+**require**: bootstrap.yml
+
+#### Usage example
 
 ```
-$> ansible-playbook -i inventary.ini deploy-api-taxi.yml -e '{api_taxi_recreate_virtualenv: true}'
+# To test locally, create a Docker container
+$> docker run --rm -ti --name deploy debian
+
+# From another shell, create the inventory file and run the playbook's dependencies and the playbook
+$> ansible-playbook -i inventory.ini bootstrap.yml common.yml
 ```
