@@ -20,6 +20,8 @@ Create a file `playbook.yml`:
 
 Create a file `inventory.ini` with the target address.
 
+Install dependencies with `ansible-playbook install -r molecule/default/requirements.yml`.
+
 Run `ansible-playbook -i inventory.ini playbook.yml`.
 
 
