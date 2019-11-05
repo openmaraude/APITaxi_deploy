@@ -7,7 +7,7 @@ testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
 ).get_hosts('all')
 
 
-def test_hosts_file(host):
+def test_vimrc(host):
     f = host.file('/etc/vim/vimrc.local')
 
     assert f.exists

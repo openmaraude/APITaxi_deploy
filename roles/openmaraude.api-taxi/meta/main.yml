@@ -1,0 +1,15 @@
+---
+galaxy_info:
+  author: Julien Castets
+  description: Deploy api.taxi components
+
+  license: MIT
+  min_ansible_version: 1.2
+
+  platforms:
+  - name: Debian
+    versions:
+    - all
+
+dependencies:
+  - role: geerlingguy.docker

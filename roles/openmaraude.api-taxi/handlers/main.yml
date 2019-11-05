@@ -1,0 +1,10 @@
+---
+
+- name: Reload systemd unit files
+  systemd:
+    daemon_reload: yes
+
+- name: Restart api-taxi
+  service:
+    name: api-taxi
+    state: restarted
