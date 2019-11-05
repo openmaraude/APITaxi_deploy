@@ -1,0 +1,28 @@
+---
+
+- name: Install common packages
+  package:
+    name:
+      - curl
+      - htop
+      - iotop
+      - iputils-ping
+      - lsof
+      - mtr
+      - procps
+      - screen
+      - socat
+      - strace
+      - sysstat
+      - tcpdump
+      - vim
+
+- name: Setup basic VIM configuration
+  template:
+    src: templates/vimrc
+    dest: /etc/vim/vimrc.local
+
+- name: Setup screenrc configuration
+  template:
+    src: templates/screenrc
+    dest: /root/.screenrc

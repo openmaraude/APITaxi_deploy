@@ -1,0 +1,9 @@
+#
+# File managed by ansible, do not edit manually
+#
+
+vbell off
+encoding UTF-8
+
+# Red version
+hardstatus alwayslastline "%{.k} %{..R}%-w%{..r}%n %t%{-}%+w%=%l  %c:%s  %{..r}%H%{.kw}  "

@@ -1,0 +1,14 @@
+---
+galaxy_info:
+  author: Julien Castets
+  description: Common packages installed on servers behind api.taxi
+
+  license: MIT
+  min_ansible_version: 1.2
+
+  platforms:
+  - name: Debian
+    versions:
+    - all
+
+dependencies: []

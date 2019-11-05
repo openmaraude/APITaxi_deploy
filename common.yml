@@ -1,9 +1,0 @@
----
-- name: Install dependencies useful to run a production server
-
-  hosts: '*'
-  gather_facts: false
-  become: true
-
-  roles:
-    - common
