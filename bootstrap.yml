@@ -1,9 +1,0 @@
----
-- name: Install necessary packages to run ansible
-
-  hosts: '*'
-  gather_facts: false
-  become: false
-
-  roles:
-    - bootstrap
