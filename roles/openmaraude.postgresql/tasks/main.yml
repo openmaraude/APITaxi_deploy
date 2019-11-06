@@ -1,0 +1,12 @@
+---
+
+- name: Install postgis
+  apt:
+    name:
+      - postgis
+
+- name: Setup PostgreSQL service
+  service:
+    name: postgresql
+    state: started
+    enabled: yes
