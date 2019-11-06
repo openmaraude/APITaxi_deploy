@@ -13,6 +13,9 @@ After=docker.service
 Restart=on-failure
 RestartSec=5
 
+# Pulling the image might be long in case of slow network
+TimeoutStartSec=20min
+
 # Pull latest version on start
 ExecStartPre=/usr/bin/docker pull {{ api_taxi_image }}:{{ api_taxi_version }}
 
