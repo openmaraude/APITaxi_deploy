@@ -2,7 +2,7 @@
 
 - name: Create systemd service file
   template:
-    src: templates/api-taxi.service.j2
+    src: templates/systemd/api-taxi.service.j2
     dest: /etc/systemd/system/api-taxi.service
   notify:
     - Reload systemd unit files
@@ -22,7 +22,7 @@
 
 - name: Create api-taxi uWSGI configuration file
   template:
-    src: templates/api-taxi.ini
+    src: templates/uwsgi/api-taxi.ini
     dest: /etc/openmaraude/api-taxi.ini
   notify: Restart api-taxi
 
@@ -37,3 +37,28 @@
     name: api-taxi
     state: started
     enabled: yes
+
+- name: Install nginx
+  apt:
+    name:
+      - nginx
+
+- name: Enable nginx
+  service:
+    name: nginx
+    state: started
+    enabled: yes
+
+- name: Remove default nginx file
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+
+- name: Create nginx default configuration
+  template:
+    src: "{{ item }}"
+    dest: "/etc/nginx/sites-enabled/{{ item | basename }}"
+  notify:
+    - Reload nginx
+  with_fileglob:
+    - templates/nginx/*.conf

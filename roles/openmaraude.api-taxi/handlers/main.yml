@@ -8,3 +8,8 @@
   service:
     name: api-taxi
     state: restarted
+
+- name: Reload nginx
+  service:
+    name: nginx
+    state: reloaded
