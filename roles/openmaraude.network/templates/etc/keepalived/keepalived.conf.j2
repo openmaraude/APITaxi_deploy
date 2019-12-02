@@ -1,0 +1,60 @@
+#
+# This file is installed by Ansible. ** DO NOT ** edit manually.
+#
+
+global_defs {
+  enable_script_security
+  script_user root
+}
+
+vrrp_script check_service {
+  script "/etc/keepalived/check.sh"
+  interval 2
+}
+
+vrrp_instance taxis01v4 {
+  interface {{ private_iface }}.{{ private_vlan }}
+  virtual_router_id {{ vrrp_router_id }}
+
+  track_interface {
+    {{ public_iface }}
+  }
+
+  {%- if keepalived_state == 'master' %}
+  state MASTER
+  priority 100
+  {%- else %}
+  state MASTER
+  priority 100
+  {%- endif %}
+
+  nopreempt
+
+  unicast_src_ip {{ private_ip_address }}
+  unicast_peer {
+    {{ vrrp_peer_ip }}
+  }
+
+  authentication {
+    auth_type PASS
+    auth_pass {{ keepalived_pass }}
+  }
+
+  virtual_ipaddress {
+    {{ failover_ipv4_address }}/{{ failover_ipv4_netmask }} dev {{ public_iface }}
+  }
+
+  virtual_ipaddress_excluded {
+    {{ failover_ipv6_address }}/{{ failover_ipv6_netmask }} dev {{ public_iface }}
+  }
+
+  track_script {
+    check_service
+  }
+
+  notify_master "/etc/keepalived/notify.sh master"
+
+  notify_backup "/etc/keepalived/notify.sh stop"
+  notify_stop "/etc/keepalived/notify.sh stop"
+  notify_fault "/etc/keepalived/notify.sh stop"
+}

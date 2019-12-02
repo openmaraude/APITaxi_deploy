@@ -1,0 +1,7 @@
+#
+# This file is installed by Ansible. ** DO NOT ** edit manually.
+#
+
+interface "enp1s0f0" {
+   send dhcp6.client-id {{ failover_ipv6_DUID }};
+}

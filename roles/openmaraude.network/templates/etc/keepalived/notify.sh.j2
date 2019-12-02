@@ -1,0 +1,92 @@
+#!/bin/sh
+#
+# This file is installed by Ansible. ** DO NOT ** edit manually.
+#
+
+PUBLIC_IFACE={{ public_iface }}
+
+API_TOKEN={{ online_api_token }}
+
+FAILOVER_IPV4_ADDRESS={{ failover_ipv4_address }}
+FAILOVER_IPV4_NETMASK={{ failover_ipv4_netmask }}
+
+FAILOVER_IPV6_ADDRESS='2001:bc8:2e81:ca00:cab:cab:cab:cab'
+FAILOVER_IPV6_NETMASK=56
+
+PUBLIC_IPV4_ADDRESS={{ public_ipv4_address }}
+
+DHCLIENT_CONF=/etc/dhcp/dhclient6-failover.conf
+DHCLIENT_PIDFILE=/var/run/dhclient6-failover.pid
+DHCLIENT_LEASES_FILE=/var/lib/dhcp/dhclient6-failover.leases
+
+SYSTEMD_NETWORK_FILE=/etc/systemd/network/enp1s0f0.network.d/failover.conf
+
+usage() {
+  echo "Usage: $0 master|stop" >&2
+  exit 1
+}
+
+switch_master() {
+  # Remove existing DHCPv6 lease, it might be linked to another instance
+  /sbin/dhclient -pf "$DHCLIENT_PIDFILE" -cf "$DHCLIENT_CONF" -lf "$DHCLIENT_LEASES_FILE" -6 -P -v "$PUBLIC_IFACE" -r
+
+  mkdir -p "$(dirname '$SYSTEMD_NETWORK_FILE')"
+
+  # Create systemd-networkd configuration file. Without configuration, restarting systemd-networkd would remove keepalived IP addresses.
+  cat<<EOF > "$SYSTEMD_NETWORK_FILE"
+[Address]
+Address=$FAILOVER_IPV4_ADDRESS/$FAILOVER_IPV4_NETMASK
+
+[Address]
+Address=$FAILOVER_IPV6_ADDRESS/$FAILOVER_IPV6_NETMASK
+EOF
+  chmod 644 "$SYSTEMD_NETWORK_FILE"
+
+  # Start DHCPv6 client, but keep it disabled: in case of server problem, the other keepalived instance will take the lease.
+  systemctl start dhclient6-failover
+
+  # Update configuration.
+  systemctl restart systemd-networkd
+
+  # If IPv4 is already attached to this server, do nothing and return
+  curl -s -H "Authorization: Bearer $API_TOKEN" \
+    "https://api.online.net/api/v1/server/ip/$FAILOVER_IPV4_ADDRESS" | grep -q "$PUBLIC_IPV4_ADDRESS" && return
+
+  # Attach IPv4 to this instance
+  curl -s -H "Authorization: Bearer $API_TOKEN" \
+    https://api.online.net/api/v1/server/failover/edit \
+    -d "source=$FAILOVER_IPV4_ADDRESS&destination=$PUBLIC_IPV4_ADDRESS"
+}
+
+stop() {
+  # Stop DHCPv6
+  systemctl stop dhclient6-failover
+
+  # Remove systemd-networkd configuration
+  rm -f "$SYSTEMD_NETWORK_FILE"
+
+  systemctl restart systemd-networkd
+}
+
+test $# -eq 1 || usage
+
+status="$1"
+
+case $status in
+  master)
+    switch_master
+    exit 0
+    ;;
+
+  stop)
+    stop
+    exit 0
+    ;;
+
+  *)
+    usage
+    ;;
+esac
+
+exit 0
+

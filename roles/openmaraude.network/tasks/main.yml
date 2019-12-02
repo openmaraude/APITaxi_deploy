@@ -1,0 +1,85 @@
+- name: Check required variables
+  fail: msg="Variable '{{ item }}' is not defined"
+  when: item not in vars
+  with_items: "{{required_vars}}"
+
+- name: Uninstall netplan
+  package:
+    name: netplan.io
+    state: absent
+
+- name: Enable systemd-networkd
+  systemd:
+    name: systemd-networkd
+    enabled: yes
+
+- name: Create network configuration for {{ public_iface }}
+  template:
+    src: templates/etc/systemd/network/public_iface.network.j2
+    dest: /etc/systemd/network/{{ public_iface }}.network
+
+- name: Create directory where keepalived stores failover configuration files
+  file:
+    path: /etc/systemd/network/{{ public_iface }}.network.d
+    state: directory
+    mode: '0755'
+
+- name: Create network configuration for {{ private_iface }}
+  template:
+    src: templates/etc/systemd/network/private_iface.network.j2
+    dest: /etc/systemd/network/{{ private_iface }}.network
+
+- name: Create systemd-netword .netdev file for {{ private_iface }}.{{ private_vlan }}
+  template:
+    src: templates/etc/systemd/network/private_iface.vlan.netdev.j2
+    dest: /etc/systemd/network/{{ private_iface }}.{{ private_vlan }}.netdev
+
+- name: Create network configuration for {{ private_iface }}.{{ private_vlan }}
+  template:
+    src: templates/etc/systemd/network/private_iface.vlan.network.j2
+    dest: /etc/systemd/network/{{ private_iface }}.{{ private_vlan }}.network
+
+- name: Create /etc/dhcp/dhclient6-failover.conf
+  template:
+    src: templates/etc/dhcp/dhclient6-failover.conf.j2
+    dest: /etc/dhcp/dhclient6-failover.conf
+
+- name: Create /etc/systemd/system/dhclient6-failover.service
+  template:
+    src: templates/etc/systemd/system/dhclient6-failover.service.j2
+    dest: /etc/systemd/system/dhclient6-failover.service
+
+- name: Disable service dhclient6-failover (service is dynamically enabled from keepalived)
+  systemd:
+    name: dhclient6-failover
+    daemon-reload: yes
+    enabled: no
+
+- name: Install keepalived
+  package:
+    name: keepalived
+    state: present
+
+- name: Enable and start keepalived
+  systemd:
+    name: keepalived
+    enabled: yes
+    state: started
+
+- name: Create /etc/keepalived/keepalived.conf
+  template:
+    src: templates/etc/keepalived/keepalived.conf.j2
+    dest: /etc/keepalived/keepalived.conf
+  notify: Restart keepalived
+
+- name: Create /etc/keepalived/check.sh
+  template:
+    src: templates/etc/keepalived/check.sh.j2
+    dest: /etc/keepalived/check.sh
+    mode: '0755'
+
+- name: Create /etc/keepalived/notify.sh
+  template:
+    src: templates/etc/keepalived/notify.sh.j2
+    dest: /etc/keepalived/notify.sh
+    mode: '0755'

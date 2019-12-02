@@ -1,0 +1,15 @@
+#
+# This file is installed by Ansible. ** DO NOT ** edit manually.
+#
+
+[Unit]
+Description=DHClient for sending DUID IPv6
+Wants=network.target
+Before=network.target
+
+[Service]
+Type=forking
+ExecStart=/sbin/dhclient -pf /var/run/dhclient6-failover.pid -cf /etc/dhcp/dhclient6-failover.conf -lf /var/lib/dhcp/dhclient6-failover.leases -6 -P -v {{ public_iface }}
+
+[Install]
+WantedBy=multi-user.target

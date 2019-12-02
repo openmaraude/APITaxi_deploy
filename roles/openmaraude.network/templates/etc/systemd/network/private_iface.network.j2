@@ -1,0 +1,9 @@
+#
+# This file is installed by Ansible. ** DO NOT ** edit manually.
+#
+
+[Match]
+Name={{ private_iface }}
+
+[Network]
+VLAN={{ private_iface }}.{{ private_vlan }}
