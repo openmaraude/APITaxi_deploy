@@ -3,6 +3,7 @@
 - name: Install common packages
   package:
     name:
+      - aptitude
       - curl
       - htop
       - iotop
