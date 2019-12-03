@@ -9,7 +9,7 @@ Name={{ private_iface }}.{{ private_vlan }}
 DHCP=no
 
 [Address]
-Address={{ private_ip_address }}
+Address={{ private_ip_address }}/{{ private_ip_netmask }}
 
 [Route]
 Destination={{ failover_ipv4_address }}/{{ failover_ipv4_netmask }}
