@@ -1,5 +1,10 @@
 ---
 
+- name: Check required variables
+  fail: msg="Variable '{{ item }}' is not defined"
+  when: item not in vars
+  with_items: "{{required_vars}}"
+
 - name: Install common packages
   package:
     name:
@@ -17,13 +22,48 @@
       - sysstat
       - tcpdump
       - vim
+      - opensmtpd
 
-- name: Setup basic VIM configuration
+- name: Setup /etc/vim/vimrc.local
   template:
     src: templates/vimrc
     dest: /etc/vim/vimrc.local
 
-- name: Setup screenrc configuration
+- name: Setup /root/.screenrc
   template:
     src: templates/screenrc
     dest: /root/.screenrc
+
+- name: Setup /etc/smtpd.conf
+  template:
+    src: templates/smtpd/smtpd.conf
+    dest: /etc/smtpd.conf
+  notify: Restart opensmtpd
+
+- name: Create directory /etc/mail
+  file:
+    path: /etc/mail
+    state: directory
+    mode: '0755'
+
+- name: Setup /etc/mail/aliases
+  template:
+    src: templates/smtpd/aliases.j2
+    dest: /etc/mail/aliases
+    mode: '0644'
+    owner: root
+    group: opensmtpd
+
+- name: Setup /etc/mail/secrets
+  template:
+    src: templates/smtpd/secrets.j2
+    dest: /etc/mail/secrets
+    mode: '0640'
+    owner: root
+    group: opensmtpd
+
+- name: Enable and start opensmtpd
+  systemd:
+    name: opensmtpd
+    enabled: yes
+    state: started

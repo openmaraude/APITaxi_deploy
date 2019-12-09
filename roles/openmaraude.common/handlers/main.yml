@@ -1,0 +1,4 @@
+- name: Restart opensmtpd
+  systemd:
+    name: opensmtpd
+    state: restarted

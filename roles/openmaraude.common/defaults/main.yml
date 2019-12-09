@@ -1,0 +1,4 @@
+required_vars:
+  - smtp_host
+  - smtp_username
+  - smtp_password
