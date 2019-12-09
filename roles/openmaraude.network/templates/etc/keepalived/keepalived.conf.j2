@@ -18,7 +18,7 @@ vrrp_script check_service {
   interval 2
 }
 
-vrrp_instance taxis01v4 {
+vrrp_instance {{ keepalived_smtp_from }} {
   interface {{ private_iface }}.{{ private_vlan }}
   virtual_router_id {{ vrrp_router_id }}
 
