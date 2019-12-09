@@ -70,16 +70,17 @@
   template:
     src: templates/etc/keepalived/keepalived.conf.j2
     dest: /etc/keepalived/keepalived.conf
+    mode: '0600'
   notify: Restart keepalived
 
 - name: Create /etc/keepalived/check.sh
   template:
     src: templates/etc/keepalived/check.sh.j2
     dest: /etc/keepalived/check.sh
-    mode: '0755'
+    mode: '0700'
 
 - name: Create /etc/keepalived/notify.sh
   template:
     src: templates/etc/keepalived/notify.sh.j2
     dest: /etc/keepalived/notify.sh
-    mode: '0755'
+    mode: '0700'
