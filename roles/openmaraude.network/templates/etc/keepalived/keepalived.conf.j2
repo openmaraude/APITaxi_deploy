@@ -5,6 +5,12 @@
 global_defs {
   enable_script_security
   script_user root
+
+  notification_email {
+    {{ keepalived_smtp_to }}
+  }
+  notification_email_from {{ keepalived_smtp_from }}
+  smtp_server localhost
 }
 
 vrrp_script check_service {
@@ -19,6 +25,8 @@ vrrp_instance taxis01v4 {
   track_interface {
     {{ public_iface }}
   }
+
+  smtp_alert
 
   {%- if keepalived_state == 'master' %}
   state MASTER

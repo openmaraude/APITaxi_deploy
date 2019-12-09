@@ -8,6 +8,8 @@ required_vars:
   - failover_ipv6_address
   - failover_ipv6_netmask
   - online_api_token
+  - keepalived_smtp_from
+  - keepalived_smtp_to
 
 public_iface: enp1s0f0
 
