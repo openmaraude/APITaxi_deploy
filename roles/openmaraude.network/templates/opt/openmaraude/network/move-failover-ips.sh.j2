@@ -32,7 +32,7 @@ switch_master() {
 
   mkdir -p "$(dirname '$SYSTEMD_NETWORK_FILE')"
 
-  # Create systemd-networkd configuration file. Without configuration, restarting systemd-networkd would remove keepalived IP addresses.
+  # Create systemd-networkd configuration file.
   cat<<EOF > "$SYSTEMD_NETWORK_FILE"
 [Address]
 Address=$FAILOVER_IPV4_ADDRESS/$FAILOVER_IPV4_NETMASK
@@ -42,7 +42,8 @@ Address=$FAILOVER_IPV6_ADDRESS/$FAILOVER_IPV6_NETMASK
 EOF
   chmod 644 "$SYSTEMD_NETWORK_FILE"
 
-  # Start DHCPv6 client, but keep it disabled: in case of server problem, the other keepalived instance will take the lease.
+  # Enable and start DHCPv6 client
+  systemctl enable dhclient6-failover
   systemctl start dhclient6-failover
 
   # Update configuration.
@@ -59,7 +60,8 @@ EOF
 }
 
 stop() {
-  # Stop DHCPv6
+  # Stop and disable DHCPv6
+  systemctl disable dhclient6-failover
   systemctl stop dhclient6-failover
 
   # Remove systemd-networkd configuration
@@ -89,4 +91,3 @@ case $status in
 esac
 
 exit 0
-

@@ -2,14 +2,11 @@ required_vars:
   - failover_ipv6_DUID
   - private_ip_address
   - private_ip_netmask
-  - keepalived_state
   - failover_ipv4_address
   - failover_ipv4_netmask
   - failover_ipv6_address
   - failover_ipv6_netmask
   - online_api_token
-  - keepalived_smtp_from
-  - keepalived_smtp_to
 
 public_iface: enp1s0f0
 

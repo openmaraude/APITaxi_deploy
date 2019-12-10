@@ -18,7 +18,7 @@
     src: templates/etc/systemd/network/public_iface.network.j2
     dest: /etc/systemd/network/{{ public_iface }}.network
 
-- name: Create directory where keepalived stores failover configuration files
+- name: Create directory where move-failover-ips.sh stores failover configuration files
   file:
     path: /etc/systemd/network/{{ public_iface }}.network.d
     state: directory
@@ -49,38 +49,20 @@
     src: templates/etc/systemd/system/dhclient6-failover.service.j2
     dest: /etc/systemd/system/dhclient6-failover.service
 
-- name: Disable service dhclient6-failover (service is dynamically enabled from keepalived)
+- name: Disable service dhclient6-failover (service is dynamically enabled from move-failover-ips.sh)
   systemd:
     name: dhclient6-failover
     daemon-reload: yes
     enabled: no
 
-- name: Install keepalived
-  package:
-    name: keepalived
-    state: present
+- name: Create /opt/openmaraude/network directory
+  file:
+    path: /opt/openmaraude/network
+    state: directory
+    mode: '0755'
 
-- name: Enable and start keepalived
-  systemd:
-    name: keepalived
-    enabled: yes
-    state: started
-
-- name: Create /etc/keepalived/keepalived.conf
+- name: Create /opt/openmaraude/network/move-failover-ips.sh
   template:
-    src: templates/etc/keepalived/keepalived.conf.j2
-    dest: /etc/keepalived/keepalived.conf
-    mode: '0600'
-  notify: Restart keepalived
-
-- name: Create /etc/keepalived/check.sh
-  template:
-    src: templates/etc/keepalived/check.sh.j2
-    dest: /etc/keepalived/check.sh
-    mode: '0700'
-
-- name: Create /etc/keepalived/notify.sh
-  template:
-    src: templates/etc/keepalived/notify.sh.j2
-    dest: /etc/keepalived/notify.sh
+    src: templates/opt/openmaraude/network/move-failover-ips.sh.j2
+    dest: /opt/openmaraude/network/move-failover-ips.sh
     mode: '0700'
