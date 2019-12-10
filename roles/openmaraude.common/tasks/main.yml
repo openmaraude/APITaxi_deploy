@@ -67,3 +67,15 @@
     name: opensmtpd
     enabled: yes
     state: started
+
+- name: Create /data/openmaraude directory
+  file:
+    path: /data/openmaraude/
+    state: directory
+    mode: '0755'
+
+- name: Create /opt/openmaraude
+  file:
+    src: /data/openmaraude
+    dest: /opt/openmaraude
+    state: link
