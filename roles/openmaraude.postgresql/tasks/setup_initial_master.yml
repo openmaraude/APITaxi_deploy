@@ -23,7 +23,7 @@
       DROP ROLE IF EXISTS {{ replication_role_name }};
       CREATE ROLE {{ replication_role_name }} WITH REPLICATION LOGIN;
       SET password_encryption = 'scram-sha-256';
-      ALTER USER {{ replication_role_name }} PASSWORD '';
+      ALTER USER {{ replication_role_name }} PASSWORD '{{ postgresql_replication_role_password }}';
     "
 
 - name: Stop PostgreSQL
@@ -40,7 +40,7 @@
 - name: Move /var/lib/postgresql/{{ postgresql_version }} to /data/postgresql
   command: mv /var/lib/postgresql/{{ postgresql_version }} /data/postgresql/
 
-- name: Create symlink /var/lib/postgresql/{{ postgresql_version }} -> /data/postgresql
+- name: Create symlink /data/postgresql/{{ postgresql_version }} /var/lib/postgresql/{{ postgresql_version }}
   file:
     src: /data/postgresql/{{ postgresql_version }}
     dest: /var/lib/postgresql/{{ postgresql_version }}
