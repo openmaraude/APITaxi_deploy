@@ -1,6 +1,7 @@
 ---
 setup_initial_master: false
 setup_slave: false
+promote_slave: false
 
 postgresql_version: '10'
 

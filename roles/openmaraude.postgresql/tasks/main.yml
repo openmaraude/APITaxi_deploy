@@ -37,3 +37,9 @@
     name: openmaraude.postgresql
     tasks_from: setup_slave
   when: setup_slave
+
+- name: Promote slave
+  include_role:
+    name: openmaraude.postgresql
+    tasks_from: promote_slave
+  when: promote_slave
