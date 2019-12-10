@@ -49,9 +49,9 @@
     dest: /var/lib/postgresql/{{ postgresql_version }}/main/recovery.conf
     mode: '0600'
 
-- name: chown /var/lib/postgresql/{{ postgresql_version }} to postgres:postgres
+- name: chown /data/postgresql/ to postgres:postgres
   file:
-    path: /var/lib/postgresql/{{ postgresql_version }}
+    path: /data/postgresql/
     owner: postgres
     group: postgres
     recurse: yes
