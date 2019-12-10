@@ -104,4 +104,4 @@ host    replication     all             ::1/128                 md5
 
 
 # Replication user
-hostssl replication     {{ replication_role_name}}    {{ private_subnet }}    scram-sha-256
+hostssl replication     {{ postgresql_replication_role_name}}    {{ private_subnet }}    scram-sha-256

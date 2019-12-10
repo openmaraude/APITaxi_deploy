@@ -31,3 +31,9 @@
     name: openmaraude.postgresql
     tasks_from: setup_initial_master
   when: setup_initial_master
+
+- name: Setup initial slave
+  include_role:
+    name: openmaraude.postgresql
+    tasks_from: setup_slave
+  when: setup_slave

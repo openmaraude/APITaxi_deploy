@@ -1,0 +1,63 @@
+# Recreate PostgreSQL slave from master
+---
+
+- name: stat /data/postgresql/{{ postgresql_version }}
+  stat:
+    path: /data/postgresql/{{ postgresql_version }}
+  register: datadir
+
+- fail:
+    msg: /data/postgresql/{{ postgresql_version }} already exists. If you really want to create a slave on this server, remove the directory manually before running this role.
+  when: datadir.stat.exists
+
+- name: Stop PostgreSQL
+  systemd:
+    name: postgresql
+    state: stopped
+
+- name: Create /etc/postgresql/{{ postgresql_version }}/main/conf.d/slave.conf
+  template:
+    src: templates/slave.conf
+    dest: /etc/postgresql/{{ postgresql_version }}/main/conf.d/slave.conf
+
+- name: Create directory /data/postgresql/{{ postgresql_version }}/main
+  file:
+    path: /data/postgresql/{{ postgresql_version }}/main
+    state: directory
+    recurse: true
+    mode: '0700'
+
+- name: Remove directory /var/lib/postgresql/{{ postgresql_version }}
+  file:
+    path: /var/lib/postgresql/{{ postgresql_version }}
+    state: absent
+
+- name: Create symlink /data/postgresql/{{ postgresql_version}} /var/lib/postgresql/{{ postgresql_version }}
+  file:
+    src: /data/postgresql/{{ postgresql_version }}
+    dest: /var/lib/postgresql/{{ postgresql_version }}
+    state: link
+
+- name: Call pg_basebackup
+  command: pg_basebackup -h {{ postgresql_master }} -D /var/lib/postgresql/{{ postgresql_version }}/main/ -P -U replicate --wal-method=stream
+  environment:
+    PGPASSWORD: "{{ postgresql_replication_role_password }}"
+
+- name: Create /var/lib/postgresql/{{ postgresql_version }}/main/recovery.conf
+  template:
+    src: templates/recovery.conf.j2
+    dest: /var/lib/postgresql/{{ postgresql_version }}/main/recovery.conf
+    mode: '0600'
+
+- name: chown /var/lib/postgresql/{{ postgresql_version }} to postgres:postgres
+  file:
+    path: /var/lib/postgresql/{{ postgresql_version }}
+    owner: postgres
+    group: postgres
+    recurse: yes
+    state: directory
+
+- name: Start PostgreSQL
+  systemd:
+    name: postgresql
+    state: started
