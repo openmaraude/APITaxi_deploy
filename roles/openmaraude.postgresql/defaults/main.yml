@@ -1,2 +1,9 @@
 ---
-# defaults file for openmaraude.postgresql
+setup_initial_master: false
+
+postgresql_version: '10'
+
+replication_role_name: replicate
+replication_max_wal_senders: 3
+replication_wal_keep_segments: 64
+private_subnet: 10.0.0.0/24

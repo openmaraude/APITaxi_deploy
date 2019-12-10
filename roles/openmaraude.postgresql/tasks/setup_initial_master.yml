@@ -1,0 +1,57 @@
+---
+
+# For new databases, only 3 databases exist: postgres, template0 and template1.
+- name: Make sure database is newly installed, or raise an error
+  shell: >
+    sudo -H -u postgres psql -t -c "
+      SELECT COUNT(*) FROM pg_catalog.pg_database;
+     " | xargs | grep '^3$' || exit 1
+
+# If /var/lib/postgresql/{{ postgresql_version }} is already a symlink, abort
+- name: stat /var/lib/postgresql/{{ postgresql_version }}
+  stat:
+    path: /var/lib/postgresql/{{ postgresql_version }}
+  register: dir
+
+- fail:
+    msg: /var/lib/postgresql/{{ postgresql_version }} is already a symlink, this ansible role has already been run on the machine. If wanted, remove postgresql manually before running this role
+  when: dir.stat.islnk
+
+- name: CREATE ROLE {{ replication_role_name }}
+  shell: >
+    sudo -u postgres psql -c "
+      DROP ROLE IF EXISTS {{ replication_role_name }};
+      CREATE ROLE {{ replication_role_name }} WITH REPLICATION LOGIN;
+      SET password_encryption = 'scram-sha-256';
+      ALTER USER {{ replication_role_name }} PASSWORD '';
+    "
+
+- name: Stop PostgreSQL
+  systemd:
+    name: postgresql
+    state: stopped
+
+- name: Create directory /data/postgresql
+  file:
+    path: /data/postgresql
+    state: directory
+    mode: '0755'
+
+- name: Move /var/lib/postgresql/{{ postgresql_version }} to /data/postgresql
+  command: mv /var/lib/postgresql/{{ postgresql_version }} /data/postgresql/
+
+- name: Create symlink /var/lib/postgresql/{{ postgresql_version }} -> /data/postgresql
+  file:
+    src: /data/postgresql/{{ postgresql_version }}
+    dest: /var/lib/postgresql/{{ postgresql_version }}
+    state: link
+
+- name: Create /etc/postgresql/{{ postgresql_version }}/main/conf.d/replication.conf
+  template:
+    src: templates/replication.conf.j2
+    dest: /etc/postgresql/{{ postgresql_version }}/main/conf.d/replication.conf
+
+- name: Start PostgreSQL
+  systemd:
+    name: postgresql
+    state: started

@@ -1,2 +1,6 @@
 ---
-# handlers file for openmaraude.postgresql
+
+- name: Restart postgresql
+  systemd:
+    name: postgresql
+    state: restarted

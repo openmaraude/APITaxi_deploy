@@ -1,0 +1,7 @@
+#
+# File managed by ansible, do not edit manually
+#
+
+wal_level = replica
+max_wal_senders = {{ replication_max_wal_senders }}
+wal_keep_segments = {{ replication_wal_keep_segments }}
