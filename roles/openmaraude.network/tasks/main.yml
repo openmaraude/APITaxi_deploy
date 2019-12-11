@@ -1,7 +1,14 @@
+- debug: var=setup_failover
+
 - name: Check required variables
   fail: msg="Variable '{{ item }}' is not defined"
   when: item not in vars
-  with_items: "{{required_vars}}"
+  with_items: "{{ required_vars }}"
+
+- name: Check required failover variables
+  fail: msg="Variable '{{ item }}' is not defined"
+  when: setup_failover and item not in vars
+  with_items: "{{ required_failover_vars }}"
 
 - name: Uninstall netplan
   package:
@@ -24,6 +31,7 @@
     path: /etc/systemd/network/{{ public_iface }}.network.d
     state: directory
     mode: '0755'
+  when: setup_failover
 
 - name: Create network configuration for {{ private_iface }}
   template:
@@ -47,26 +55,31 @@
   template:
     src: templates/etc/dhcp/dhclient6-failover.conf.j2
     dest: /etc/dhcp/dhclient6-failover.conf
+  when: setup_failover
 
 - name: Create /etc/systemd/system/dhclient6-failover.service
   template:
     src: templates/etc/systemd/system/dhclient6-failover.service.j2
     dest: /etc/systemd/system/dhclient6-failover.service
+  when: setup_failover
 
 - name: Disable service dhclient6-failover (service is dynamically enabled from move-failover-ips.sh)
   systemd:
     name: dhclient6-failover
     daemon-reload: yes
     enabled: no
+  when: setup_failover
 
 - name: Create /opt/openmaraude/network directory
   file:
     path: /opt/openmaraude/network
     state: directory
     mode: '0755'
+  when: setup_failover
 
 - name: Create /opt/openmaraude/network/move-failover-ips.sh
   template:
     src: templates/opt/openmaraude/network/move-failover-ips.sh.j2
     dest: /opt/openmaraude/network/move-failover-ips.sh
     mode: '0700'
+  when: setup_failover

@@ -1,12 +1,16 @@
 required_vars:
-  - failover_ipv6_DUID
+  - setup_failover
   - private_ip_address
   - private_ip_netmask
+
+required_failover_vars:
+  - failover_ipv6_DUID
   - failover_ipv4_address
   - failover_ipv4_netmask
   - failover_ipv6_address
   - failover_ipv6_netmask
   - online_api_token
+  - public_ipv4_address
 
 public_iface: enp1s0f0
 
