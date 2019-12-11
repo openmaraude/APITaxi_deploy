@@ -17,6 +17,7 @@
   template:
     src: templates/etc/systemd/network/public_iface.network.j2
     dest: /etc/systemd/network/{{ public_iface }}.network
+  notify: Restart systemd-networkd
 
 - name: Create directory where move-failover-ips.sh stores failover configuration files
   file:
@@ -28,16 +29,19 @@
   template:
     src: templates/etc/systemd/network/private_iface.network.j2
     dest: /etc/systemd/network/{{ private_iface }}.network
+  notify: Restart systemd-networkd
 
 - name: Create systemd-netword .netdev file for {{ private_iface }}.{{ private_vlan }}
   template:
     src: templates/etc/systemd/network/private_iface.vlan.netdev.j2
     dest: /etc/systemd/network/{{ private_iface }}.{{ private_vlan }}.netdev
+  notify: Restart systemd-networkd
 
 - name: Create network configuration for {{ private_iface }}.{{ private_vlan }}
   template:
     src: templates/etc/systemd/network/private_iface.vlan.network.j2
     dest: /etc/systemd/network/{{ private_iface }}.{{ private_vlan }}.network
+  notify: Restart systemd-networkd
 
 - name: Create /etc/dhcp/dhclient6-failover.conf
   template:
