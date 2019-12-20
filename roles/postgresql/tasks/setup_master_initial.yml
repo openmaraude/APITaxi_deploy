@@ -1,0 +1,64 @@
+---
+# For new databases, only 3 databases exist: postgres, template0 and template1.
+- name: Make sure database is newly installed, or raise an error
+  shell: >
+    sudo -u postgres psql -t -c "
+      SELECT COUNT(*) FROM pg_catalog.pg_database;
+     " | xargs | grep '^3$' || exit 1
+
+# If /var/lib/postgresql/{{ postgresql_version }} is already a symlink, abort
+- name: stat /var/lib/postgresql/{{ postgresql_version }}
+  stat:
+    path: /var/lib/postgresql/{{ postgresql_version }}
+  register: dir
+
+- fail:
+    msg: /var/lib/postgresql/{{ postgresql_version }} is already a symlink, this ansible role has already been run on the machine. If wanted, remove postgresql manually before running this role
+  when: dir.stat.islnk
+
+- name: CREATE ROLE replicate
+  shell: >
+    sudo -u postgres psql -c "
+      DROP ROLE IF EXISTS replicate;
+      CREATE ROLE replicate WITH REPLICATION LOGIN;
+      SET password_encryption = 'scram-sha-256';
+      ALTER USER replicate PASSWORD '{{ postgresql_replication_password }}';
+    "
+
+- name: CREATE ROLE barman
+  shell: >
+    sudo -u postgres psql -c "
+      DROP ROLE IF EXISTS barman;
+      CREATE ROLE barman WITH REPLICATION LOGIN;
+      SET password_encryption = 'scram-sha-256';
+      ALTER USER barman PASSWORD '{{ postgresql_barman_password }}';
+    "
+
+- name: CREATE ROLE barman
+  shell: >
+    sudo -u postgres psql -c "
+      DROP ROLE IF EXISTS barman_streaming;
+      CREATE ROLE barman_streaming WITH REPLICATION LOGIN;
+      SET password_encryption = 'scram-sha-256';
+      ALTER USER barman_streaming PASSWORD '{{ postgresql_barman_password }}';
+    "
+
+- name: Stop PostgreSQL
+  systemd:
+    name: postgresql
+    state: stopped
+
+- name: Create directory /data/postgresql
+  file:
+    path: /data/postgresql
+    state: directory
+    mode: '0755'
+
+- name: Move /var/lib/postgresql/{{ postgresql_version }} to /data/postgresql
+  command: mv /var/lib/postgresql/{{ postgresql_version }} /data/postgresql/
+
+- name: Create symlink /data/postgresql/{{ postgresql_version }} /var/lib/postgresql/{{ postgresql_version }}
+  file:
+    src: /data/postgresql/{{ postgresql_version }}
+    dest: /var/lib/postgresql/{{ postgresql_version }}
+    state: link

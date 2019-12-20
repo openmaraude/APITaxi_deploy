@@ -1,0 +1,11 @@
+--
+- name: Setup initial slave
+  include_role:
+    name: postgresql
+    tasks_from: setup_slave_initial
+  when: setup_initial
+
+- name: Start PostgreSQL
+  systemd:
+    name: postgresql
+    state: started

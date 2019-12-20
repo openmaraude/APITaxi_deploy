@@ -1,0 +1,176 @@
+upstream apistream {
+    server unix:///var/run/uwsgi_socket/apitaxi_1571759761.sock;
+}
+
+upstream frontstream {
+    server unix:///var/run/uwsgi_socket/fronttaxi_1571759761.sock;
+}
+
+log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                '$status $body_bytes_sent "$http_referer" $http_x_api_key "$http_accept" '
+                '"$http_user_agent" "$http_x_forwarded_for" '
+                '$request_time $upstream_response_time $pipe';
+
+server {
+    server_name api.taxi;
+    listen 443 ssl spdy;
+    ssl_certificate /etc/ssl/private/letsencrypt-domain.pem;
+    ssl_certificate_key /etc/ssl/private/letsencrypt-domain.key;
+    ssl_prefer_server_ciphers on;
+    ssl_ciphers "EECDH+ECDSA+AESGCM EECDH+aRSA+AESGCM EECDH+ECDSA+SHA384 EECDH+ECDSA+SHA256 EECDH+aRSA+SHA384 EECDH+aRSA+SHA256 EECDH EDH+aRSA !RC4 !aNULL !eNULL !LOW !3DES !MD5 !EXP !PSK !SRP !DSS";
+    ssl_dhparam /etc/ssl/dhparams.pem;
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_timeout 10m;
+
+    add_header X-Frame-Options SAMEORIGIN;
+    add_header X-XSS-Protection "1; mode=block";
+    add_header X-Content-Type-Options nosniff;
+    add_header Strict-Transport-Security max-age=15768000;
+
+    gzip on;
+    gzip_comp_level 6;
+    gzip_disable "msie6";
+    gzip_min_length 150;
+    gzip_proxied any;
+    gzip_types text/plain text/css application/x-javascript text/xml application/xml application/xml+rss text/javascript application
+/json application/javascript;
+    gzip_vary on;
+
+    # Controlling buffer overflow attacks
+    # http://www.cyberciti.biz/tips/linux-unix-bsd-nginx-webserver-security.html
+    client_body_buffer_size  8k;
+    client_header_buffer_size 1k;
+    client_max_body_size 20m;
+    large_client_header_buffers 4 8k;
+
+    client_body_timeout   120;
+    client_header_timeout 12;
+    keepalive_timeout     15 15;
+    send_timeout          10;
+
+    access_log  /var/log/nginx/api.taxi.access.log  main;
+    error_log /var/log/nginx/api.taxi.error.log;
+
+    location ~* ^/(index|dash|login|user_key|logout)$ {
+        uwsgi_pass frontstream;
+        include /etc/nginx/uwsgi_params;
+    }
+
+    location ~* ^(/(ads|drivers|index|user)/(_view|form|delete))$ {
+        uwsgi_pass frontstream;
+        include /etc/nginx/uwsgi_params;
+    }
+
+    location = / {
+        uwsgi_pass frontstream;
+        include /etc/nginx/uwsgi_params;
+    }
+
+    location ~* ^/(ads|drivers|hails|taxis|vehicles)/$ {
+        uwsgi_pass apistream;
+        include /etc/nginx/uwsgi_params;
+    }
+
+    location ~* ^/((hails|users|taxis)/(?!(_view|delete|form|_explore|_map))[^/]+(/|/_log)?)$ {
+        uwsgi_pass apistream;
+        include /etc/nginx/uwsgi_params;
+    }
+
+    location ~* ^/zupc/[\d]+/_show_temp_geojson$ {
+        uwsgi_pass apistream;
+        include /etc/nginx/uwsgi_params;
+    }
+
+    location /waiting_time/roissy/ {
+        uwsgi_pass apistream;
+        include /etc/nginx/uwsgi_params;
+    }
+
+    location ~* ^/documentation(/(index|moteur|operateur|reference|examples))?$ {
+        uwsgi_pass frontstream;
+        include /etc/nginx/uwsgi_params;
+    }
+
+    location = /stats {
+        uwsgi_pass frontstream;
+        include /etc/nginx/uwsgi_params;
+    }
+
+    location = /zupc/_show_temp {
+        uwsgi_pass frontstream;
+        include /etc/nginx/uwsgi_params;
+    }
+
+    location /static/ {
+        uwsgi_pass frontstream;
+        include /etc/nginx/uwsgi_params;
+    }
+
+    location /users/ {
+        uwsgi_pass apistream;
+        include /etc/nginx/uwsgi_params;
+    }
+
+    location ~* ^/hails/(.+/)?_explore$ {
+        uwsgi_pass frontstream;
+        include /etc/nginx/uwsgi_params;
+    }
+
+    location ~* ^/taxis/(.+)/hails/_explore$ {
+        uwsgi_pass frontstream;
+        include /etc/nginx/uwsgi_params;
+    }
+
+    location ~* ^/hails/(.+/)?_map$ {
+        uwsgi_pass frontstream;
+        include /etc/nginx/uwsgi_params;
+    }
+
+    location = /swagger.json {
+        uwsgi_pass apistream;
+        include /etc/nginx/uwsgi_params;
+    }
+
+    location /munin/static/ {
+        alias /etc/munin/static/;
+        expires modified +1w;
+    }
+
+    location /munin/ {
+        # auth_basic            "Restricted";
+        # Create the htpasswd file with the htpasswd tool.
+        # auth_basic_user_file  /etc/nginx/htpasswd;
+
+        alias /var/cache/munin/www/;
+        expires modified +310s;
+    }
+
+    location /doc/ {
+        alias /home/deploy/APITaxi_swagger/;
+        expires modified +1w;
+    }
+
+    location =/zupc/ {
+        uwsgi_pass apistream;
+        include /etc/nginx/uwsgi_params;
+    }
+
+    location = /stats_hails {
+        uwsgi_pass frontstream;
+        include /etc/nginx/uwsgi_params;
+    }
+
+    location = /table {
+        uwsgi_pass frontstream;
+        include /etc/nginx/uwsgi_params;
+    }
+    location /mymap/ {
+        root /var/www/html;
+    }
+
+    location ~ /.well-known {
+        root /var/www/html;
+        allow all;
+    }
+
+}

@@ -1,0 +1,70 @@
+---
+
+##- name: Create systemd service file
+##  template:
+##    src: templates/systemd/api-taxi.service.j2
+##    dest: /etc/systemd/system/api-taxi.service
+##  notify:
+##    - Reload systemd unit files
+##    - Restart api-taxi
+##
+##- name: Creates directory /etc/openmaraude
+##  file:
+##    path: /etc/openmaraude
+##    state: directory
+##
+##- name: Creates directory /var/run/openmaraude
+##  file:
+##    path: /var/run/openmaraude
+##    state: directory
+##    # Container needs to write socket files in this directory
+##    mode: '0777'
+##
+##- name: Create api-taxi uWSGI configuration file
+##  template:
+##    src: templates/uwsgi/api-taxi.ini
+##    dest: /etc/openmaraude/api-taxi.ini
+##  notify: Restart api-taxi
+
+- name: Create api-taxi configuration file
+  template:
+    src: templates/uwsgi/settings.py.j2
+    dest: /etc/openmaraude/settings.py
+  notify: Restart api-taxi
+
+# If variable api_taxi_restart is true, force a restart
+- name: Force api-taxi restart
+  command: /bin/true
+  notify: Restart api-taxi
+  when: api_taxi_restart
+
+###- name: Enable api-taxi.service
+###  service:
+###    name: api-taxi
+###    state: started
+###    enabled: yes
+###
+###- name: Install nginx
+###  apt:
+###    name:
+###      - nginx
+###
+###- name: Enable nginx
+###  service:
+###    name: nginx
+###    state: started
+###    enabled: yes
+###
+###- name: Remove default nginx file
+###  file:
+###    path: /etc/nginx/sites-enabled/default
+###    state: absent
+###
+###- name: Create nginx default configuration
+###  template:
+###    src: "{{ item }}"
+###    dest: "/etc/nginx/sites-enabled/{{ item | basename }}"
+###  notify:
+###    - Reload nginx
+###  with_fileglob:
+###    - templates/nginx/*.conf

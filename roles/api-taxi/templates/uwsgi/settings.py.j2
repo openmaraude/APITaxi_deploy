@@ -1,0 +1,17 @@
+DEBUG = False
+ENV = 'PROD'
+
+HOST = 'api.taxi'
+SERVER_NAME = 'api.taxi'
+PORT = 80
+
+SECRET_KEY = '{{ api_taxi.secret_key }}'
+SQLALCHEMY_DATABASE_URI = '{{ api_taxi.postgresql.dsn }}'
+
+REDIS_URL = "{{ api_taxi.redis.url }}"
+REDIS_GEOINDEX = '{{ api_taxi.redis.geoindex }}'
+
+REDIS_SAVED_URL = '{{ api_taxi.redis_save.url }}'
+
+SECURITY_PASSWORD_HASH = 'bcrypt'
+SECURITY_PASSWORD_SALT = '{{ api_taxi.password.salt }}'
