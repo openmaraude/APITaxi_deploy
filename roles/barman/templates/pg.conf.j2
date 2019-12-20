@@ -1,0 +1,17 @@
+#
+# This file is installed by Ansible. ** DO NOT ** edit manually.
+#
+
+[pg]
+description =  "PostgreSQL master"
+conninfo = host={{ postgresql_master }} user=barman dbname=postgres
+streaming_conninfo = host={{ postgresql_master }} user=barman_streaming dbname=postgres
+backup_method = postgres
+
+streaming_archiver = on
+slot_name = barman
+create_slot = auto
+
+# Keep at least 4 backups
+minimum_redundancy = 4
+retention_policy = RECOVERY WINDOW OF 2 WEEKS

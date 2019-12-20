@@ -1,0 +1,54 @@
+---
+
+- name: Create directory /data/barman
+  file:
+    path: /data/postgresql
+    state: directory
+    mode: '0755'
+
+- name: Import setup_2ndquadrant
+  include_role:
+    name: barman
+    tasks_from: setup_2ndquadrant
+
+- name: Install barman and postgresql-client
+  apt:
+    name:
+      - barman
+      - postgresql-client
+
+- stat: path=/var/lib/barman
+  register: barman_directory
+
+- name: Move /var/lib/barman to /data/barman
+  command: mv /var/lib/barman /data/barman/
+  when: not barman_directory.stat.islnk
+
+- name: Create symlink /data/barman /var/lib/barman
+  file:
+    src: /data/barman
+    dest: /var/lib/barman
+    state: link
+  when: not barman_directory.stat.islnk
+
+- name: Create /etc/barman.d/pg.conf
+  template:
+    src: templates/pg.conf.j2
+    dest: /etc/barman.d/pg.conf
+
+- name: Create /var/lib/barman/.pgpass
+  template:
+    src: templates/pgpass.j2
+    dest: /var/lib/barman/.pgpass
+    mode: '0600'
+    owner: barman
+    group: barman
+
+- name: Make sure barman has access to database
+  shell: sudo -u barman psql -w -c 'SELECT version()' -U barman -h {{ postgresql_master }} postgres
+
+- name: Make sure barman_streaming has replication access to database
+  shell: sudo -u barman psql -w -U barman_streaming -h {{ postgresql_master }} -c "IDENTIFY_SYSTEM" replication=1
+
+- debug:
+    msg: If command `barman check pg` returns an error, run `barman switch-wal pg` and wait ~30 seconds.

@@ -1,0 +1,15 @@
+---
+
+# Barman version shipped on Ubuntu is super old. Install 2ndquadrant
+# repositories to get a uptodate version.
+
+# 2ndquadrant_install is a copy of the install script provided by 2ndquadrant
+# available at https://dl.2ndquadrant.com/default/release/site/
+- name: Create /tmp/2ndquadrant_install.sh
+  template:
+    src: templates/2ndquadrant_install.sh
+    dest: /tmp/2ndquadrant_install.sh
+    mode: '0755'
+
+- name: Install 2ndquadrant repositories
+  shell: /tmp/2ndquadrant_install.sh

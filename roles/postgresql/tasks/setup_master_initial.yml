@@ -29,7 +29,7 @@
   shell: >
     sudo -u postgres psql -c "
       DROP ROLE IF EXISTS barman;
-      CREATE ROLE barman WITH REPLICATION LOGIN;
+      CREATE ROLE barman SUPERUSER LOGIN;
       SET password_encryption = 'scram-sha-256';
       ALTER USER barman PASSWORD '{{ postgresql_barman_password }}';
     "
