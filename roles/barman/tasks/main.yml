@@ -52,3 +52,11 @@
 
 - debug:
     msg: If command `barman check pg` returns an error, run `barman switch-wal pg` and wait ~30 seconds.
+
+- name: Create cronjob to backup database every day
+  cron:
+    name: "backup database"
+    minute: "30"
+    hour: "7"
+    user: barman
+    job: "barman backup pg"
