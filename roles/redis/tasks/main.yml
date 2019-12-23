@@ -4,6 +4,39 @@
   apt:
     name: redis-server
 
+# Check if /var/lib/redis is directory
+- stat: path=/var/lib/redis
+  register: redis_directory
+
+# If not (first install), stop redis
+- name: Stop redis
+  systemd:
+    name: redis
+    state: stopped
+  when: not redis_directory.stat.islnk
+
+# Move directory to /data
+- name: Move /var/lib/redis to /data
+  command: mv /var/lib/redis /data/
+  when: not redis_directory.stat.islnk
+
+# ln -s /data/redis /var/lib/redis
+- name: Create symlink /data/redis /var/lib/redis
+  file:
+    src: /data/redis
+    dest: /var/lib/redis
+    state: link
+    owner: redis
+    group: redis
+  when: not redis_directory.stat.islnk
+
+# Then start redis
+- name: Start redis
+  systemd:
+    name: redis
+    state: started
+  when: not redis_directory.stat.islnk
+
 - name: Create /etc/redis/redis.conf
   template:
     src: templates/redis.conf.j2
