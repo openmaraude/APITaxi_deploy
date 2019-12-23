@@ -44,3 +44,18 @@
     owner: redis
     group: redis
   notify: Restart redis
+
+- name: Create /opt/openmaraude/redis
+  file:
+    path: /opt/openmaraude/redis
+    state: directory
+    mode: '0755'
+
+- name: Create /opt/openmaraude/redis/switch-master.sh
+  template:
+    src: templates/switch-master.sh.j2
+    dest: /opt/openmaraude/redis/switch-master.sh
+    owner: root
+    group: root
+    mode: '0700'
+  when: redis_role == 'slave'
