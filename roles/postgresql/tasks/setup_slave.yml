@@ -1,4 +1,5 @@
---
+---
+
 - name: Setup initial slave
   include_role:
     name: postgresql
