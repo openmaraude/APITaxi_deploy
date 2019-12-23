@@ -10,3 +10,17 @@
   systemd:
     name: postgresql
     state: started
+
+- name: Create /opt/openmaraude/postgresql
+  file:
+    path: /opt/openmaraude/postgresql
+    state: directory
+    mode: '0755'
+
+- name: Create /opt/openmaraude/postgresql/promote-slave.sh
+  template:
+    src: templates/promote-slave.sh.j2
+    dest: /opt/openmaraude/postgresql/promote-slave.sh
+    owner: root
+    group: root
+    mode: '0700'

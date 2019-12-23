@@ -5,8 +5,6 @@ setup_slave: false
 # Should only be true for the first setup
 setup_initial: false
 
-promote_slave: false
-
 postgresql_version: '10'
 
 private_subnet: 10.0.0.0/24

@@ -1,6 +1,0 @@
----
-
-# Promote slave to master. Do not forget to shutdown the existing master!
-
-- name: Run pg_ctl to promote slave
-  command: sudo -u postgres /usr/lib/postgresql/{{ postgresql_version }}/bin/pg_ctl -D /var/lib/postgresql/{{ postgresql_version }}/main promote
