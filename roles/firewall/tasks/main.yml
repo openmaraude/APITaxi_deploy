@@ -1,0 +1,44 @@
+---
+
+- name: Install ufw
+  apt:
+    name:
+      - ufw
+
+- name: Enable UFW
+  ufw:
+    state: enabled
+
+- name: Set logging to low
+  ufw:
+    logging: 'low'
+
+- name: Reject incoming
+  ufw:
+    direction: incoming
+    policy: reject
+
+- name: Allow outgoing
+  ufw:
+    direction: outgoing
+    policy: allow
+
+- name: Allow all from 10.0.0.0/8
+  ufw:
+    rule: allow
+    src: 10.0.0.0/8
+
+- name: Allow SSH
+  ufw:
+    rule: allow
+    name: OpenSSH
+
+- name: Allow HTTP
+  ufw:
+    rule: allow
+    port: http
+
+- name: Allow HTTPS
+  ufw:
+    rule: allow
+    port: https
