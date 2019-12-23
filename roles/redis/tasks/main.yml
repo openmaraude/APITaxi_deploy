@@ -1,0 +1,13 @@
+---
+
+- name: Install redis
+  apt:
+    name: redis-server
+
+- name: Create /etc/redis/redis.conf
+  template:
+    src: templates/redis.conf.j2
+    dest: /etc/redis/redis.conf
+    owner: redis
+    group: redis
+  notify: Restart redis
