@@ -1,0 +1,16 @@
+#
+# This file is installed by Ansible. ** DO NOT ** edit manually.
+#
+
+<source>
+  @type forward
+  port 24224
+</source>
+
+<match geotaxi.position>
+  @type file
+  path /data/fluent/geotaxi
+  format json
+  include_time_key true
+  compress gzip
+</match>

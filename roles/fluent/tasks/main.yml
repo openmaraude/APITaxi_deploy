@@ -1,0 +1,30 @@
+---
+
+- name: Add treasuredata Apt signing key
+  apt_key:
+    url: https://packages.treasuredata.com/GPG-KEY-td-agent
+    state: present
+
+- name: Add treasuredata Apt repository
+  apt_repository:
+    repo: deb http://packages.treasuredata.com/3/ubuntu/bionic/ bionic contrib
+    state: present
+
+- name: Install td-agent
+  apt:
+    name:
+      - td-agent
+
+- name: Create /etc/td-agent/td-agent.conf
+  template:
+    src: templates/td-agent.conf.j2
+    dest: /etc/td-agent/td-agent.conf
+  notify: Restart fluentd
+
+- name: Create directory /data/fluent/geotaxi/
+  file:
+    path: /data/fluent/geotaxi
+    state: directory
+    mode: '0755'
+    owner: td-agent
+    group: td-agent

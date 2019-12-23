@@ -1,0 +1,6 @@
+---
+
+- name: Restart fluentd
+  systemd:
+    name: td-agent
+    state: restarted
