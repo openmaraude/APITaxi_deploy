@@ -5,6 +5,8 @@
 
 # 2ndquadrant_install is a copy of the install script provided by 2ndquadrant
 # available at https://dl.2ndquadrant.com/default/release/site/
+#
+# It would be better to use apt_key to make ansible "check" command working.
 - name: Create /tmp/2ndquadrant_install.sh
   template:
     src: templates/2ndquadrant_install.sh
