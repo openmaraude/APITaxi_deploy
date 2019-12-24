@@ -1,5 +1,4 @@
 #
-#
 # This file is installed by Ansible. ** DO NOT ** edit manually.
 #
 
@@ -70,7 +69,7 @@
 
   # Whether queries should be logged before execution. Very useful for troubleshooting, but will
   # log any sensitive data contained within a query.
-  # query-log-enabled = true
+  query-log-enabled = false
 
   # Validates incoming writes to ensure keys only have valid unicode characters.
   # This setting will incur a small overhead because every key must be checked.
@@ -249,7 +248,7 @@
 
 [http]
   # Determines whether HTTP endpoint is enabled.
-  # enabled = true
+  enabled = true
 
   # Determines whether the Flux query endpoint is enabled.
   # flux-enabled = false
@@ -258,7 +257,7 @@
   # flux-log-enabled = false
 
   # The bind address used by the HTTP service.
-  # bind-address = ":8086"
+  bind-address = ":8086"
 
   # Determines whether user authentication is enabled over HTTP/HTTPS.
   # auth-enabled = false
@@ -287,7 +286,7 @@
   # access-log-status-filters = []
 
   # Determines whether detailed write logging is enabled.
-  # write-tracing = false
+  write-tracing = false
 
   # Determines whether the pprof endpoint is enabled.  This endpoint is used for
   # troubleshooting and monitoring.
