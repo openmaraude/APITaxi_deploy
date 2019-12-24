@@ -4,7 +4,7 @@
   apt:
     name: redis-server
 
-# Check if /var/lib/redis is directory
+# Check if /var/lib/redis is a link
 - stat: path=/var/lib/redis
   register: redis_directory
 
