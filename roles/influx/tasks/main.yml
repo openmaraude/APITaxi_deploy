@@ -47,3 +47,9 @@
     name: influxdb
     state: started
   when: not influxdb_directory.stat.islnk
+
+- name: Create /etc/influxdb/influxdb.conf
+  template:
+    src: templates/influxdb.conf.j2
+    dest: /etc/influxdb/influxdb.conf
+  notify: Restart influxdb
