@@ -61,12 +61,19 @@
     dest: /etc/systemd/system/dhclient6-failover.service
   when: setup_failover
 
-- name: Disable service dhclient6-failover (service is dynamically enabled from move-failover-ips.sh)
+- name: Disable service dhclient6-failover (since this server is not master). dhclient6-failover service is dynamically enabled from move-failover-ips.sh
   systemd:
     name: dhclient6-failover
     daemon-reload: yes
     enabled: no
-  when: setup_failover
+  when: setup_failover and failover_ipv4_address not in ansible_all_ipv4_addresses
+
+- name: Enable service dhclient6-failover (since this server is the master)
+  systemd:
+    name: dhclient6-failover
+    daemon-reload: yes
+    enabled: yes
+  when: setup_failover and failover_ipv4_address in ansible_all_ipv4_addresses
 
 - name: Create /opt/openmaraude/network directory
   file:
