@@ -1,0 +1,49 @@
+---
+
+- name: Add influxdata Apt signing key
+  apt_key:
+    url: https://repos.influxdata.com/influxdb.key
+    state: present
+
+- name: Add influxdata Apt repository
+  apt_repository:
+    repo: deb https://repos.influxdata.com/ubuntu {{ ansible_lsb.codename }} stable
+    state: present
+
+- name: Install influxdb
+  apt:
+    name:
+      - influxdb
+
+# Check if /var/lib/influxdb is a link
+- stat: path=/var/lib/influxdb
+  register: influxdb_directory
+
+# If not (first install), stop redis
+- name: Stop influxdb
+  systemd:
+    name: influxdb
+    state: stopped
+  when: not influxdb_directory.stat.islnk
+
+# Move directory to /data
+- name: Move /var/lib/influxdb to /data
+  command: mv /var/lib/influxdb /data/
+  when: not influxdb_directory.stat.islnk
+
+# ln -s /data/influxdb /var/lib/influxdb
+- name: Create symlink /data/influxdb /var/lib/influxdb
+  file:
+    src: /data/influxdb
+    dest: /var/lib/influxdb
+    state: link
+    owner: influxdb
+    group: influxdb
+  when: not influxdb_directory.stat.islnk
+
+# start influxdb
+- name: Start influxdb
+  systemd:
+    name: influxdb
+    state: started
+  when: not influxdb_directory.stat.islnk
