@@ -7,7 +7,7 @@
 
 - name: Add treasuredata Apt repository
   apt_repository:
-    repo: deb http://packages.treasuredata.com/3/ubuntu/bionic/ bionic contrib
+    repo: deb http://packages.treasuredata.com/3/ubuntu/bionic/ {{ ansible_lsb.codename }} contrib
     state: present
 
 - name: Install td-agent
