@@ -5,6 +5,16 @@
   when: item not in vars
   with_items: "{{required_vars}}"
 
+- name: Add docker Apt signing key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Add docker Apt repository
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_lsb.codename }} stable
+    state: present
+
 - name: Install common packages
   package:
     name:
@@ -23,6 +33,7 @@
       - tcpdump
       - vim
       - opensmtpd
+      - docker-ce
 
 - name: Setup /etc/vim/vimrc.local
   template:
