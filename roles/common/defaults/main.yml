@@ -2,3 +2,6 @@ required_vars:
   - smtp_host
   - smtp_username
   - smtp_password
+
+# Force using Python3 with ansible, since the default for ansible is Python2.
+ansible_python_interpreter: /usr/bin/python3
