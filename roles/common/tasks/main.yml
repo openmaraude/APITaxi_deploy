@@ -34,6 +34,7 @@
       - vim
       - opensmtpd
       - docker-ce
+      - python3-pip
 
 - name: Setup /etc/vim/vimrc.local
   template:
@@ -78,6 +79,17 @@
     name: opensmtpd
     enabled: yes
     state: started
+
+- name: Install docker Python binding (required by ansible to manage docker)
+  pip:
+    name: docker
+
+- name: Create docker network to run production containers
+  docker_network:
+    name: prod
+    ipam_config:
+      - subnet: 172.30.0.0/24
+        gateway: 172.30.0.1
 
 - name: Create /data/openmaraude directory
   file:

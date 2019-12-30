@@ -1,0 +1,34 @@
+---
+
+- hosts: all
+  roles:
+    - common
+
+- hosts:
+    - taxis01
+    - taxis02
+  roles:
+    - network
+    - firewall
+    - fluent
+    - influx
+
+# Install postgresql/redis master
+- hosts:
+    - taxis01
+  roles:
+    - postgresql
+    - redis
+
+# Install postgresql/redis slave
+- hosts:
+    - taxis02
+  roles:
+    - postgresql
+    - redis
+
+# Install barman
+- hosts:
+    - taxis03
+  roles:
+    - barman
