@@ -3,13 +3,13 @@
 - hosts: all
   roles:
     - common
+    - network
+    - firewall
 
 - hosts:
     - taxis01
     - taxis02
   roles:
-    - network
-    - firewall
     - fluent
     - influx
 
