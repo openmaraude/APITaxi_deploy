@@ -1,0 +1,25 @@
+---
+
+- name: Setup systemd service file
+  template:
+    src: templates/geotaxi.service
+    dest: /etc/systemd/system/geotaxi.service
+  notify:
+    - Reload systemd
+
+- name: Create directory /opt/openmaraude/geotaxi
+  file:
+    path: /opt/openmaraude/geotaxi
+    state: directory
+
+- name: Setup /opt/openmaraude/geotaxi/params.env
+  template:
+    src: templates/geotaxi.env.j2
+    dest: /opt/openmaraude/geotaxi/geotaxi.env
+
+# Restart is always mandatory to pull the latest version
+- name: Enable and start (or restart) geotaxi service
+  systemd:
+    name: geotaxi
+    enabled: yes
+    state: restarted

@@ -1,0 +1,25 @@
+#
+# This file is installed by Ansible. ** DO NOT ** edit manually.
+
+[Unit]
+Description=GeoTaxi
+Requires=docker.service
+After=docker.service
+
+[Service]
+Restart=always
+
+EnvironmentFile=/opt/openmaraude/geotaxi/geotaxi.env
+ExecStartPre=-/usr/bin/docker rm -f geotaxi
+ExecStartPre=/usr/bin/docker pull "$DOCKER_IMAGE"
+ExecStart=/usr/bin/docker run --rm \
+                --name geotaxi \
+                --network prod \
+                -p 8080:8080 \
+                --env-file=/opt/openmaraude/geotaxi/geotaxi.env \
+                "$DOCKER_IMAGE"
+
+ExecStop=/usr/bin/docker stop geotaxi
+
+[Install]
+WantedBy=multi-user.target

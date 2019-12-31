@@ -1,0 +1,7 @@
+---
+
+- name: Import role to deploy geotaxi
+  include_role:
+    name: deploy
+    tasks_from: geotaxi
+  when: deploy_geotaxi
