@@ -2,7 +2,7 @@
 # File managed by ansible, do not edit manually
 #
 
-listen_addresses = '{{ private_ip_address }},172.30.0.1'
+listen_addresses = '{{ network.private.ipv4.addr }},172.30.0.1'
 
 # The configuration below is generated with https://pgtune.leopard.in.ua with the following parameters:
 #   DB Version: 10

@@ -3,5 +3,5 @@
 #
 
 interface "enp1s0f0" {
-   send dhcp6.client-id {{ failover_ipv6_DUID }};
+   send dhcp6.client-id {{ network.failover.ipv6.DUID }};
 }

@@ -3,14 +3,14 @@
 #
 
 [Match]
-Name={{ private_iface }}.{{ private_vlan }}
+Name={{ network.private.iface }}.{{ network.private.vlan }}
 
 [Network]
 DHCP=no
 
 [Address]
-Address={{ private_ip_address }}/{{ private_ip_netmask }}
+Address={{ network.private.ipv4.addr }}/{{ network.private.ipv4.netmask }}
 
 [Route]
-Destination={{ failover_ipv4_address }}/{{ failover_ipv4_netmask }}
+Destination={{ network.failover.ipv4.addr }}/{{ network.failover.ipv4.netmask }}
 Scope=link

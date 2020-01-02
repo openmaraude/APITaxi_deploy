@@ -1,6 +1,7 @@
-public_iface: enp1s0f0
+network:
+  public:
+    iface: enp1s0f0
 
-private_iface: enp1s0f1
-private_vlan: 1337
-
-vrrp_router_id: 42
+  private:
+    iface: enp1s0f1
+    vlan: 1337

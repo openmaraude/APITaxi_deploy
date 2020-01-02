@@ -3,8 +3,8 @@
 #
 
 [NetDev]
-Name={{ private_iface }}.{{ private_vlan }}
+Name={{ network.private.iface }}.{{ network.private.vlan }}
 Kind=vlan
 
 [VLAN]
-Id={{ private_vlan }}
+Id={{ network.private.vlan }}

@@ -3,17 +3,17 @@
 # This file is installed by Ansible. ** DO NOT ** edit manually.
 #
 
-PUBLIC_IFACE={{ public_iface }}
+PUBLIC_IFACE={{ network.public.iface }}
 
-API_TOKEN={{ online_api_token }}
+API_TOKEN={{ network.online_api_token }}
 
-FAILOVER_IPV4_ADDRESS={{ failover_ipv4_address }}
-FAILOVER_IPV4_NETMASK={{ failover_ipv4_netmask }}
+FAILOVER_IPV4_ADDRESS={{ network.failover.ipv4.addr }}
+FAILOVER_IPV4_NETMASK={{ network.failover.ipv4.netmask }}
 
-FAILOVER_IPV6_ADDRESS='2001:bc8:2e81:ca00:cab:cab:cab:cab'
-FAILOVER_IPV6_NETMASK=56
+FAILOVER_IPV6_ADDRESS='{{ network.failover.ipv6.addr }}'
+FAILOVER_IPV6_NETMASK={{ network.failover.ipv6.netmask }}
 
-PUBLIC_IPV4_ADDRESS={{ public_ipv4_address }}
+PUBLIC_IPV4_ADDRESS={{ network.public.ipv4.addr }}
 
 DHCLIENT_CONF=/etc/dhcp/dhclient6-failover.conf
 DHCLIENT_PIDFILE=/var/run/dhclient6-failover.pid
