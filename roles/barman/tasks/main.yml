@@ -45,10 +45,10 @@
     group: barman
 
 - name: Make sure barman has access to database
-  shell: sudo -u barman psql -w -c 'SELECT version()' -U barman -h {{ postgresql_master }} postgres
+  shell: sudo -u barman psql -w -c 'SELECT version()' -U barman -h {{ postgresql.master }} postgres
 
 - name: Make sure barman_streaming has replication access to database
-  shell: sudo -u barman psql -w -U barman_streaming -h {{ postgresql_master }} -c "IDENTIFY_SYSTEM" replication=1
+  shell: sudo -u barman psql -w -U barman_streaming -h {{ postgresql.master }} -c "IDENTIFY_SYSTEM" replication=1
 
 - debug:
     msg: If command `barman check pg` returns an error, run `barman switch-wal pg` and wait ~30 seconds.

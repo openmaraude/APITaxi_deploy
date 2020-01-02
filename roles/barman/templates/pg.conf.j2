@@ -4,8 +4,8 @@
 
 [pg]
 description =  "PostgreSQL master"
-conninfo = host={{ postgresql_master }} user=barman dbname=postgres
-streaming_conninfo = host={{ postgresql_master }} user=barman_streaming dbname=postgres
+conninfo = host={{ postgresql.master }} user=barman dbname=postgres
+streaming_conninfo = host={{ postgresql.master }} user=barman_streaming dbname=postgres
 backup_method = postgres
 
 streaming_archiver = on
