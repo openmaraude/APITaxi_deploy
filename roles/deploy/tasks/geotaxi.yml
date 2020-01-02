@@ -2,7 +2,7 @@
 
 - name: Setup systemd service file
   template:
-    src: templates/geotaxi.service
+    src: templates/geotaxi/geotaxi.service
     dest: /etc/systemd/system/geotaxi.service
   notify:
     - Reload systemd
@@ -14,7 +14,7 @@
 
 - name: Setup /opt/openmaraude/geotaxi/params.env
   template:
-    src: templates/geotaxi.env.j2
+    src: templates/geotaxi/geotaxi.env.j2
     dest: /opt/openmaraude/geotaxi/geotaxi.env
 
 # Restart is always mandatory to pull the latest version
