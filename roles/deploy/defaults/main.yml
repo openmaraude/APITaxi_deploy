@@ -1,6 +1,8 @@
 ---
 
-deploy_geotaxi: False
+geotaxi:
+  deploy: false
+  docker:
+    version: latest
+    image: openmaraude/geotaxi-python
 
-geotaxi_docker_version: latest
-geotaxi_docker_image: openmaraude/geotaxi-python

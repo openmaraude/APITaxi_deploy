@@ -4,4 +4,4 @@
   include_role:
     name: deploy
     tasks_from: geotaxi
-  when: deploy_geotaxi
+  when: geotaxi.deploy
