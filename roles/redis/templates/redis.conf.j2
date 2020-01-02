@@ -284,8 +284,8 @@ dir /var/lib/redis
 #    and resynchronize with them.
 #
 # slaveof <masterip> <masterport>
-{% if redis_role == 'slave' %}
-slaveof {{ redis_master }} 6379
+{% if redis.role == 'slave' %}
+slaveof {{ redis.master }} 6379
 {% endif %}
 
 # If the master is password protected (using the "requirepass" configuration
@@ -293,7 +293,7 @@ slaveof {{ redis_master }} 6379
 # starting the replication synchronization process, otherwise the master will
 # refuse the slave request.
 #
-masterauth {{ redis_password }}
+masterauth {{ redis.password }}
 
 # When a slave loses its connection with the master, or when the replication
 # is still in progress, the slave can act in two different ways:
@@ -506,7 +506,7 @@ slave-priority 100
 # use a very strong password otherwise it will be very easy to break.
 #
 # requirepass foobared
-requirepass {{ redis_password }}
+requirepass {{ redis.password }}
 
 # Command renaming.
 #

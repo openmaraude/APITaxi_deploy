@@ -59,4 +59,4 @@
     owner: root
     group: root
     mode: '0700'
-  when: redis_role == 'slave'
+  when: redis.role == 'slave'

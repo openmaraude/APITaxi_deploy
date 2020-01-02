@@ -11,4 +11,4 @@ usage() {
 
 test $# -eq 0 || usage
 
-redis-cli -a na4Ahd7oYeewiec slaveof no one
+redis-cli -a {{ redis.password }} slaveof no one
