@@ -1,13 +1,3 @@
-- name: Check required variables
-  fail: msg="Variable '{{ item }}' is not defined"
-  when: item not in vars
-  with_items: "{{ required_vars }}"
-
-- name: Check required failover variables
-  fail: msg="Variable '{{ item }}' is not defined"
-  when: setup_failover and item not in vars
-  with_items: "{{ required_failover_vars }}"
-
 - name: Uninstall netplan
   package:
     name: netplan.io
