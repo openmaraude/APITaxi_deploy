@@ -4,4 +4,4 @@ table secrets file:/etc/mail/secrets
 listen on localhost
 
 accept for local alias <aliases> deliver to mbox
-accept for any relay via tls+auth://prod@mail.gandi.net auth <secrets>
+accept for any relay via tls+auth://prod@{{ smtp.host }} auth <secrets>
