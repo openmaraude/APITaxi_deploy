@@ -4,12 +4,12 @@
   include_role:
     name: postgresql
     tasks_from: setup_master_initial
-  when: setup_initial
+  when: postgresql.setup_initial
 
-- name: Create /etc/postgresql/{{ postgresql_version }}/main/conf.d/replication.conf
+- name: Create /etc/postgresql/{{ postgresql.version }}/main/conf.d/replication.conf
   template:
     src: templates/replication.conf.j2
-    dest: /etc/postgresql/{{ postgresql_version }}/main/conf.d/replication.conf
+    dest: /etc/postgresql/{{ postgresql.version }}/main/conf.d/replication.conf
   notify: Restart postgresql
 
 - name: Start PostgreSQL

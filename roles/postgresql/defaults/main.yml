@@ -1,10 +1,11 @@
 ---
-setup_master: false
-setup_slave: false
 
-# Should only be true for the first setup
-setup_initial: false
+postgresql:
+  setup_master: false
+  setup_slave: false
+  setup_initial: false
 
-postgresql_version: '10'
+  version: '10'
 
-private_subnet: 10.0.0.0/24
+network:
+  private_subnet: 10.0.0.0/24

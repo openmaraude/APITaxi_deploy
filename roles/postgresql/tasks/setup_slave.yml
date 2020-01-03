@@ -4,7 +4,7 @@
   include_role:
     name: postgresql
     tasks_from: setup_slave_initial
-  when: setup_initial
+  when: postgresql.setup_initial
 
 - name: Start PostgreSQL
   systemd:

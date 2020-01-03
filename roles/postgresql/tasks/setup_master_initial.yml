@@ -7,13 +7,13 @@
      " | xargs | grep '^3$' || exit 1
 
 # If /var/lib/postgresql/{{ postgresql_version }} is already a symlink, abort
-- name: stat /var/lib/postgresql/{{ postgresql_version }}
+- name: stat /var/lib/postgresql/{{ postgresql.version }}
   stat:
-    path: /var/lib/postgresql/{{ postgresql_version }}
+    path: /var/lib/postgresql/{{ postgresql.version }}
   register: dir
 
 - fail:
-    msg: /var/lib/postgresql/{{ postgresql_version }} is already a symlink, this ansible role has already been run on the machine. If wanted, remove postgresql manually before running this role
+    msg: /var/lib/postgresql/{{ postgresql.version }} is already a symlink, this ansible role has already been run on the machine. If wanted, remove postgresql manually before running this role
   when: dir.stat.islnk
 
 - name: CREATE ROLE replicate
@@ -22,7 +22,7 @@
       DROP ROLE IF EXISTS replicate;
       CREATE ROLE replicate WITH REPLICATION LOGIN;
       SET password_encryption = 'scram-sha-256';
-      ALTER USER replicate PASSWORD '{{ postgresql_replication_password }}';
+      ALTER USER replicate PASSWORD '{{ postgresql.replication_password }}';
     "
 
 - name: CREATE ROLE barman
@@ -31,7 +31,7 @@
       DROP ROLE IF EXISTS barman;
       CREATE ROLE barman SUPERUSER LOGIN;
       SET password_encryption = 'scram-sha-256';
-      ALTER USER barman PASSWORD '{{ postgresql_barman_password }}';
+      ALTER USER barman PASSWORD '{{ postgresql.barman_password }}';
     "
 
 - name: CREATE ROLE barman
@@ -40,7 +40,7 @@
       DROP ROLE IF EXISTS barman_streaming;
       CREATE ROLE barman_streaming WITH REPLICATION LOGIN;
       SET password_encryption = 'scram-sha-256';
-      ALTER USER barman_streaming PASSWORD '{{ postgresql_barman_password }}';
+      ALTER USER barman_streaming PASSWORD '{{ postgresql.barman_password }}';
     "
 
 - name: Stop PostgreSQL
@@ -54,11 +54,11 @@
     state: directory
     mode: '0755'
 
-- name: Move /var/lib/postgresql/{{ postgresql_version }} to /data/postgresql
-  command: mv /var/lib/postgresql/{{ postgresql_version }} /data/postgresql/
+- name: Move /var/lib/postgresql/{{ postgresql.version }} to /data/postgresql
+  command: mv /var/lib/postgresql/{{ postgresql.version }} /data/postgresql/
 
-- name: Create symlink /data/postgresql/{{ postgresql_version }} /var/lib/postgresql/{{ postgresql_version }}
+- name: Create symlink /data/postgresql/{{ postgresql.version }} /var/lib/postgresql/{{ postgresql.version }}
   file:
-    src: /data/postgresql/{{ postgresql_version }}
-    dest: /var/lib/postgresql/{{ postgresql_version }}
+    src: /data/postgresql/{{ postgresql.version }}
+    dest: /var/lib/postgresql/{{ postgresql.version }}
     state: link

@@ -14,13 +14,13 @@
 - name: Setup pg_hba.conf
   template:
     src: templates/pg_hba.conf.j2
-    dest: /etc/postgresql/{{ postgresql_version }}/main/pg_hba.conf
+    dest: /etc/postgresql/{{ postgresql.version }}/main/pg_hba.conf
   notify: Restart postgresql
 
-- name: Create /etc/postgresql/{{ postgresql_version }}/main/conf.d/tuning.conf
+- name: Create /etc/postgresql/{{ postgresql.version }}/main/conf.d/tuning.conf
   template:
     src: templates/tuning.conf.j2
-    dest: /etc/postgresql/{{ postgresql_version }}/main/conf.d/tuning.conf
+    dest: /etc/postgresql/{{ postgresql.version }}/main/conf.d/tuning.conf
   notify: Restart postgresql
 
 - name: Restart PostgreSQL if pg_hba.conf has changed
@@ -30,10 +30,10 @@
   include_role:
     name: postgresql
     tasks_from: setup_master
-  when: setup_master
+  when: postgresql.setup_master
 
 - name: Setup slave
   include_role:
     name: postgresql
     tasks_from: setup_slave
-  when: setup_slave
+  when: postgresql.setup_slave

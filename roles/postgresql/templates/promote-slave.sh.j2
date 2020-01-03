@@ -11,4 +11,4 @@ usage() {
 
 test $# -eq 0 || usage
 
-sudo -u postgres /usr/lib/postgresql/{{ postgresql_version }}/bin/pg_ctl -D /var/lib/postgresql/{{ postgresql_version }}/main promote
+sudo -u postgres /usr/lib/postgresql/{{ postgresql.version }}/bin/pg_ctl -D /var/lib/postgresql/{{ postgresql.version }}/main promote
