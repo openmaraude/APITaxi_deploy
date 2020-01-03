@@ -1,0 +1,18 @@
+---
+
+- name: Install nginx
+  apt:
+    name:
+      - nginx
+
+- name: Remove default nginx configuration file
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify: Reload nginx
+
+- name: Setup /etc/nginx/sites-enabled/api-taxi.conf
+  template:
+    src: templates/api-taxi.conf.j2
+    dest: /etc/nginx/sites-enabled/api-taxi.conf
+  notify: Reload nginx
