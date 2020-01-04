@@ -1,4 +1,2 @@
 *.pyc
-inventory.ini
-inventory.yml
 *playbook*.yml
