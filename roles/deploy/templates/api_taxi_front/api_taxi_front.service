@@ -1,0 +1,31 @@
+#
+# This file is installed by Ansible. ** DO NOT ** edit manually.
+#
+
+[Unit]
+Description=APITaxi front
+Requires=docker.service
+After=docker.service
+
+[Service]
+Restart=always
+
+EnvironmentFile=/opt/openmaraude/api_taxi_front/api_taxi_front.env
+ExecStartPre=-/usr/bin/docker rm -f api_taxi_front
+ExecStartPre=/usr/bin/docker pull "$DOCKER_IMAGE"
+ExecStart=/usr/bin/docker run --rm \
+                --name api_taxi_front \
+                --network prod \
+                -p 5000:5000 \
+                -p 5007:5007 \
+                --env-file=/opt/openmaraude/api_taxi_front/api_taxi_front.env \
+                -v /opt/openmaraude/api_taxi_front/uwsgi.ini:/uwsgi.ini:ro \
+                -v /opt/openmaraude/api_taxi_front/settings.py:/settings.py:ro \
+                -v /var/lib/api_taxi_front/uploads:/uploads \
+                -e 'APITAXI_CONFIG_FILE=/settings.py' \
+                "$DOCKER_IMAGE"
+
+ExecStop=/usr/bin/docker stop api_taxi_front
+
+[Install]
+WantedBy=multi-user.target

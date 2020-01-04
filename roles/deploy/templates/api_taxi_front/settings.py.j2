@@ -1,0 +1,77 @@
+#
+# This file is installed by Ansible. ** DO NOT ** edit manually.
+#
+
+DEBUG = False
+ENV = 'PROD'
+
+HOST = 'api.taxi'
+SERVER_NAME = 'api.taxi'
+PORT = 80
+
+SECRET_KEY = '{{ deploy.api_taxi_front.secret_key }}'
+SQLALCHEMY_DATABASE_URI = 'postgresql://{{ deploy.api_taxi_front.postgresql.username }}:{{ deploy.api_taxi_front.postgresql.password }}@172.30.0.1/taxis_prod'
+REDIS_URL = "redis://:@172.30.0.1:6379/0"
+REDIS_GEOINDEX = 'geoindex_2'
+REDIS_SAVED_URL = "redis://:@172.30.0.1:6380/0"
+SECURITY_PASSWORD_HASH = 'bcrypt'
+SECURITY_PASSWORD_SALT = '{{ deploy.api_taxi_front.security_password_salt }}'
+SECURITY_REGISTERABLE = False
+UPLOADS_DEFAULT_DEST = '/uploads'
+UPLOADS_DEFAULT_URL = '/documents/<path:filename>'
+UPLOADED_IMAGES_DEST = '/uploads/images'
+UPLOADED_DOCUMENTS_DEST = '/uploads/documents'
+UPLOADED_DOCUMENTS_URL = '/documents/<path:filename>'
+SLACK_API_KEY = '{{ deploy.api_taxi_front.slack_api_key }}'
+
+DOGPILE_CACHE_REGIONS = [
+    ('taxis', None,'dogpile.cache.null'),
+    ('hails', None, 'dogpile.cache.null'),
+    ('taxis_zupc', None, 'dogpile.cache.null'),
+    ('zupc', None, 'dogpile.cache.memory'),
+    ('users', None, 'dogpile.cache.memory'),
+    ('taxis_cache_sql', 3600, 'dogpile.cache.redis', None,
+        {'wrap': 'APITaxi_utils.msgpack_backend.MsgpackProxy',
+        'url': 'redis://172.30.0.1:6379/0'}),
+    ('zupc_lon_lat', None, 'dogpile.cache.memory'),
+    ('zupc_list', None, 'dogpile.cache.memory'),
+    ('zupc_parent_shape', None, 'dogpile.cache.memory'),
+]
+
+
+DOGPILE_CACHE_BACKEND = 'dogpile.cache.redis'
+DOGPILE_CACHE_URLS = ['redis://172.30.0.1:6379/0']
+
+SQLALCHEMY_POOL_SIZE = 15
+
+CELERY_BROKER_URL = 'redis://172.30.0.1:6379/0'
+CELERY_RESULT_BACKEND = None
+CELERY_IGNORE_RESULT = True
+CELERY_STORE_ERRORS_EVEN_IF_IGNORED = True
+CELERYBEAT_SCHEDULE_FILENAME = '/tmp/statbeat_scheduler'
+
+from celery.schedules import crontab
+#List of tuples of the form
+# (frequency in minute, kwargs) where kwargs in passed to crontab
+STORE_TAXIS_FREQUENCIES = [
+    (1, {'minute': '*/1'}),
+    (60,{'minute': 0, 'hour': '*/1'}),
+    (24 * 60, {'minute': 0, 'hour': 0}),
+    (24 * 60 * 7, {'minute': 0, 'hour': 0, 'day_of_week': 1})
+]
+CELERYBEAT_SCHEDULE = dict()
+for frequency, cron_kwargs in STORE_TAXIS_FREQUENCIES:
+       CELERYBEAT_SCHEDULE['store_active_taxis_every_{}'.format(frequency)] =  {
+            'task': 'store_active_taxis',
+            'schedule': crontab(**cron_kwargs),
+            'args': [frequency]
+       }
+
+INFLUXDB_HOST = '172.16.30.1'
+INFLUXDB_PORT = 8086
+INFLUXDB_USERNAME = '{{ influx.username }}'
+INFLUXDB_PASSWORD = '{{ influx.password }}'
+INFLUXDB_TAXIS_DB = 'taxis_prod'
+
+TDAGENT_ES_HOST = '{{ deploy.api_taxi_front.tdagent_es_host }}'
+DEFAULT_MAX_RADIUS = 6000
