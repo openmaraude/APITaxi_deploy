@@ -97,3 +97,14 @@
     src: /data/openmaraude
     dest: /opt/openmaraude
     state: link
+
+- name: Create directory /root/.ssh
+  file:
+    path: /root/.ssh
+    state: directory
+    mode: '0755'
+
+- name: Create /root/.ssh/authorized_keys
+  template:
+    src: templates/authorized_keys.j2
+    dest: /root/.ssh/authorized_keys

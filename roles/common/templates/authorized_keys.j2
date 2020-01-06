@@ -1,0 +1,6 @@
+#
+# File managed by ansible, do not edit manually
+#
+{% for key in ssh.pubkeys %}
+{{ key }}
+{% endfor %}
