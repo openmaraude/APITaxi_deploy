@@ -1,0 +1,26 @@
+#
+# This file is installed by Ansible. ** DO NOT ** edit manually.
+#
+
+[Unit]
+Description=map
+Requires=docker.service
+After=docker.service
+
+[Service]
+Restart=always
+
+EnvironmentFile=/opt/openmaraude/map/map.env
+ExecStartPre=-/usr/bin/docker rm -f map
+ExecStartPre=/usr/bin/docker pull "$DOCKER_IMAGE"
+ExecStart=/usr/bin/docker run --rm \
+                --name map \
+                --network prod \
+                -p 9999:80 \
+                --env-file=/opt/openmaraude/map/map.env \
+                "$DOCKER_IMAGE"
+
+ExecStop=/usr/bin/docker stop map
+
+[Install]
+WantedBy=multi-user.target

@@ -11,3 +11,9 @@ api_taxi_front:
   docker:
     version: latest
     image: openmaraude/api_taxi_front
+
+map:
+  deploy: false
+  docker:
+    version: latest
+    image: openmaraude/map

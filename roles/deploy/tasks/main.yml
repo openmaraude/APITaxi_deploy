@@ -11,3 +11,9 @@
     name: deploy
     tasks_from: api_taxi_front.yml
   when: api_taxi_front.deploy
+
+- name: Import role to deploy map
+  include_role:
+    name: deploy
+    tasks_from: map.yml
+  when: map.deploy

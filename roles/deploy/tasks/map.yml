@@ -1,0 +1,26 @@
+---
+
+- name: Setup systemd service file
+  template:
+    src: templates/map/map.service
+    dest: /etc/systemd/system/map.service
+  notify:
+    - Reload systemd
+
+- name: Create directory /opt/openmaraude/map
+  file:
+    path: /opt/openmaraude/map
+    state: directory
+
+- name: Setup /opt/openmaraude/map/params.env
+
+  template:
+    src: templates/map/map.env.j2
+    dest: /opt/openmaraude/map/map.env
+
+# Restart is always mandatory to pull the latest version
+- name: Enable and start (or restart) map service
+  systemd:
+    name: map
+    enabled: yes
+    state: restarted
