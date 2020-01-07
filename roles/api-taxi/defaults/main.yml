@@ -1,7 +1,0 @@
----
-
-api_taxi_image: openmaraude/apitaxi
-api_taxi_version: latest
-
-# Set to true to force a restart
-api_taxi_restart: false
