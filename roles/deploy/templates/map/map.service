@@ -11,8 +11,8 @@ After=docker.service
 Restart=always
 
 EnvironmentFile=/opt/openmaraude/map/map.env
-ExecStartPre=-/usr/bin/docker rm -f map
 ExecStartPre=/usr/bin/docker pull "$DOCKER_IMAGE"
+ExecStartPre=-/usr/bin/docker rm -f map
 ExecStart=/usr/bin/docker run --rm \
                 --name map \
                 --network prod \

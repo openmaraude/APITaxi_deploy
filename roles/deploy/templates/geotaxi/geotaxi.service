@@ -11,8 +11,8 @@ After=docker.service
 Restart=always
 
 EnvironmentFile=/opt/openmaraude/geotaxi/geotaxi.env
-ExecStartPre=-/usr/bin/docker rm -f geotaxi
 ExecStartPre=/usr/bin/docker pull "$DOCKER_IMAGE"
+ExecStartPre=-/usr/bin/docker rm -f geotaxi
 ExecStart=/usr/bin/docker run --rm \
                 --name geotaxi \
                 --network prod \

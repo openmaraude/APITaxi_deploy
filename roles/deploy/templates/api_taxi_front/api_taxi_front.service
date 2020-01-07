@@ -11,8 +11,8 @@ After=docker.service
 Restart=always
 
 EnvironmentFile=/opt/openmaraude/api_taxi_front/api_taxi_front.env
-ExecStartPre=-/usr/bin/docker rm -f api_taxi_front
 ExecStartPre=/usr/bin/docker pull "$DOCKER_IMAGE"
+ExecStartPre=-/usr/bin/docker rm -f api_taxi_front
 ExecStart=/usr/bin/docker run --rm \
                 --name api_taxi_front \
                 --network prod \
