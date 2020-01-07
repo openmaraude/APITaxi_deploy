@@ -1,9 +1,23 @@
 ---
 
-- name: Install nginx
+- name: Install nginx and certbot
   apt:
     name:
       - nginx
+      - certbot
+      - python3-certbot-nginx
+
+- stat: path=/etc/letsencrypt/live/{{ deploy.hostname }}
+  register: letsencrypt_directory
+
+- fail:
+    msg: "Letsencrypt certificates must be installed manually for {{ deploy.hostname }}. Run `certbot --nginx`, or copy them from the master server (if this machine is the slave)."
+  when: not letsencrypt_directory.stat.exists
+
+- name: Generate /etc/ssl/dhparams.pem
+  openssl_dhparam:
+    path: /etc/ssl/dhparam.pem
+  notify: Reload nginx
 
 - name: Remove default nginx configuration file
   file:

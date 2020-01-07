@@ -1,20 +1,3 @@
 ---
 
-- name: Setup /etc/ssl/private/letsencrypt-domain.pem
-  copy:
-    dest: /etc/ssl/private/letsencrypt-domain.pem
-    content: "{{ ssl.letsencrypt_domain_pem }}"
-    mode: '0644'
 
-- name: Setup /etc/ssl/private/letsencrypt-domain.key
-  copy:
-    dest: /etc/ssl/private/letsencrypt-domain.key
-    content: "{{ ssl.letsencrypt_domain_key }}"
-    mode: '0400'
-
-# For nginx SSL configuration generated with https://ssl-config.mozilla.org/
-- name: Download /etc/ssl/dhparam.pem
-  get_url:
-    url: https://ssl-config.mozilla.org/ffdhe2048.txt
-    dest: /etc/ssl/dhparam.pem
-    mode: '0644'

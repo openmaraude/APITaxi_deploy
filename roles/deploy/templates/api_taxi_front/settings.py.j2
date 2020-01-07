@@ -5,8 +5,8 @@
 DEBUG = False
 ENV = 'PROD'
 
-HOST = 'api.taxi'
-SERVER_NAME = 'api.taxi'
+HOST = '{{ deploy.hostname }}'
+SERVER_NAME = '{{ deploy.hostname }}'
 PORT = 80
 
 SECRET_KEY = '{{ deploy.api_taxi_front.secret_key }}'

@@ -12,7 +12,6 @@
   roles:
     - fluent
     - influx
-    - ssl
     - nginx
 
 # Install postgresql/redis master
