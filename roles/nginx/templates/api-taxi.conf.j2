@@ -2,6 +2,10 @@ upstream api-taxi-front {
     server 127.0.0.1:5000;
 }
 
+upstream api-taxi {
+    server 127.0.0.1:5010;
+}
+
 server {
     server_name new.api.taxi;
     listen 443 ssl http2;
@@ -63,6 +67,26 @@ server {
         uwsgi_pass api-taxi-front;
     }
 
+    location ~* ^/(ads|drivers|hails|taxis|vehicles)/$ {
+        include /etc/nginx/uwsgi_params;
+        uwsgi_pass api-taxi;
+    }
+
+    location ~* ^/((hails|users|taxis)/(?!(_view|delete|form|_explore|_map))[^/]+(/|/_log)?)$ {
+        include /etc/nginx/uwsgi_params;
+        uwsgi_pass api-taxi;
+    }
+
+    location ~* ^/zupc/[\d]+/_show_temp_geojson$ {
+        include /etc/nginx/uwsgi_params;
+        uwsgi_pass api-taxi;
+    }
+
+    location /waiting_time/roissy/ {
+        include /etc/nginx/uwsgi_params;
+        uwsgi_pass api-taxi;
+    }
+
     location ~* ^/documentation(/(index|moteur|operateur|reference|examples))?$ {
         include /etc/nginx/uwsgi_params;
         uwsgi_pass api-taxi-front;
@@ -83,6 +107,11 @@ server {
         uwsgi_pass api-taxi-front;
     }
 
+    location /users/ {
+        include /etc/nginx/uwsgi_params;
+        uwsgi_pass api-taxi;
+    }
+
     location ~* ^/hails/(.+/)?_explore$ {
         include /etc/nginx/uwsgi_params;
         uwsgi_pass api-taxi-front;
@@ -96,6 +125,16 @@ server {
     location ~* ^/hails/(.+/)?_map$ {
         include /etc/nginx/uwsgi_params;
         uwsgi_pass api-taxi-front;
+    }
+
+    location = /swagger.json {
+        include /etc/nginx/uwsgi_params;
+        uwsgi_pass api-taxi;
+    }
+
+    location =/zupc/ {
+        include /etc/nginx/uwsgi_params;
+        uwsgi_pass api-taxi;
     }
 
     location = /stats_hails {
