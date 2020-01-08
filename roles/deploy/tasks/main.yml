@@ -9,8 +9,24 @@
 - name: Import role to deploy APITaxi_front
   include_role:
     name: deploy
-    tasks_from: api_taxi_front.yml
+    tasks_from: api_taxi.yml
+  vars:
+    project: api_taxi_front
+    host_port: 5000
+    host_port_stats: 5007
+    python_module: APITaxi_front
   when: api_taxi_front.deploy
+
+- name: Import role to deploy APITaxi
+  include_role:
+    name: deploy
+    tasks_from: api_taxi.yml
+  vars:
+    project: api_taxi
+    host_port: 5010
+    host_port_stats: 5017
+    python_module: APITaxi_front
+  when: api_taxi.deploy
 
 - name: Import role to deploy map
   include_role:

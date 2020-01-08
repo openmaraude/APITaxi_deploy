@@ -9,20 +9,20 @@ HOST = '{{ deploy.hostname }}'
 SERVER_NAME = '{{ deploy.hostname }}'
 PORT = 80
 
-SECRET_KEY = '{{ deploy.api_taxi_front.secret_key }}'
-SQLALCHEMY_DATABASE_URI = 'postgresql://{{ deploy.api_taxi_front.postgresql.username }}:{{ deploy.api_taxi_front.postgresql.password }}@172.30.0.1/taxis_prod'
+SECRET_KEY = '{{ deploy.api_taxi.secret_key }}'
+SQLALCHEMY_DATABASE_URI = 'postgresql://{{ deploy.api_taxi.postgresql.username }}:{{ deploy.api_taxi.postgresql.password }}@172.30.0.1/taxis_prod'
 REDIS_URL = "redis://:@172.30.0.1:6379/0"
 REDIS_GEOINDEX = 'geoindex_2'
 REDIS_SAVED_URL = "redis://:@172.30.0.1:6380/0"
 SECURITY_PASSWORD_HASH = 'bcrypt'
-SECURITY_PASSWORD_SALT = '{{ deploy.api_taxi_front.security_password_salt }}'
+SECURITY_PASSWORD_SALT = '{{ deploy.api_taxi.security_password_salt }}'
 SECURITY_REGISTERABLE = False
 UPLOADS_DEFAULT_DEST = '/uploads'
 UPLOADS_DEFAULT_URL = '/documents/<path:filename>'
 UPLOADED_IMAGES_DEST = '/uploads/images'
 UPLOADED_DOCUMENTS_DEST = '/uploads/documents'
 UPLOADED_DOCUMENTS_URL = '/documents/<path:filename>'
-SLACK_API_KEY = '{{ deploy.api_taxi_front.slack_api_key }}'
+SLACK_API_KEY = '{{ deploy.api_taxi.slack_api_key }}'
 
 DOGPILE_CACHE_REGIONS = [
     ('taxis', None,'dogpile.cache.null'),
@@ -73,5 +73,5 @@ INFLUXDB_USERNAME = '{{ influx.username }}'
 INFLUXDB_PASSWORD = '{{ influx.password }}'
 INFLUXDB_TAXIS_DB = 'taxis_prod'
 
-TDAGENT_ES_HOST = '{{ deploy.api_taxi_front.tdagent_es_host }}'
+TDAGENT_ES_HOST = '{{ deploy.api_taxi.tdagent_es_host }}'
 DEFAULT_MAX_RADIUS = 6000

@@ -17,9 +17,9 @@
     name: postgresql
     state: started
 
-- name: CREATE ROLE {{ deploy.api_taxi_front.postgresql.username }}
+- name: CREATE ROLE {{ deploy.api_taxi.postgresql.username }}
   shell: >
     sudo -u postgres psql -c "
       SET password_encryption = 'scram-sha-256';
-      CREATE ROLE {{ deploy.api_taxi_front.postgresql.username }} WITH LOGIN PASSWORD '{{ deploy.api_taxi_front.postgresql.password }}';
-    " || echo "Role {{ deploy.api_taxi_front.postgresql.username }} already exists"
+      CREATE ROLE {{ deploy.api_taxi.postgresql.username }} WITH LOGIN PASSWORD '{{ deploy.api_taxi.postgresql.password }}';
+    " || echo "Role {{ deploy.api_taxi.postgresql.username }} already exists"
