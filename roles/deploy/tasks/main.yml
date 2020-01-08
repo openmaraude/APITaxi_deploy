@@ -25,7 +25,7 @@
     project: api_taxi
     host_port: 5010
     host_port_stats: 5017
-    python_module: APITaxi_front
+    python_module: APITaxi
   when: api_taxi.deploy
 
 - name: Import role to deploy map
