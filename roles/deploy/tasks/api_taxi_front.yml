@@ -1,26 +1,26 @@
 ---
 
-- name: Create directory /opt/openmaraude/api_taxi
+- name: Create directory /opt/openmaraude/api_taxi_front
   file:
-    path: /opt/openmaraude/api_taxi
+    path: /opt/openmaraude/api_taxi_front
     state: directory
 
-- name: Setup /opt/openmaraude/api_taxi/uwsgi.ini
+- name: Setup /opt/openmaraude/api_taxi_front/uwsgi.ini
   template:
     src: templates/api_taxi/uwsgi.ini
-    dest: /opt/openmaraude/api_taxi/uwsgi.ini
+    dest: /opt/openmaraude/api_taxi_front/uwsgi.ini
   vars:
     python_module: APITaxi
 
-- name: Setup /opt/openmaraude/api_taxi/settings.py
+- name: Setup /opt/openmaraude/api_taxi_front/settings.py
   template:
     src: templates/api_taxi/settings.py.j2
-    dest: /opt/openmaraude/api_taxi/settings.py
+    dest: /opt/openmaraude/api_taxi_front/settings.py
 
-- name: Setup /opt/openmaraude/api_taxi/api_taxi.env
+- name: Setup /opt/openmaraude/api_taxi_front/api_taxi_front.env
   template:
     src: templates/api_taxi/api_taxi.env
-    dest: /opt/openmaraude/api_taxi/api_taxi.env
+    dest: /opt/openmaraude/api_taxi_front/api_taxi_front.env
   vars:
     docker_image: "{{ api_taxi.docker.image }}"
     docker_image_version: "{{ api_taxi.docker.version }}"
@@ -39,11 +39,11 @@
 - name: Setup systemd service file
   template:
     src: templates/api_taxi/api_taxi.service
-    dest: /etc/systemd/system/api_taxi.service
+    dest: /etc/systemd/system/api_taxi_front.service
   vars:
     project: api_taxi
-    host_port: 5010
-    host_port_stats: 5017
+    host_port: 5000
+    host_port_stats: 5007
   notify:
     - Reload systemd
 
@@ -53,8 +53,8 @@
   meta: flush_handlers
 
 # Restart is always mandatory to pull the latest version
-- name: Enable and start (or restart) api_taxi service
+- name: Enable and start (or restart) api_taxi_front service
   systemd:
-    name: "api_taxi"
+    name: "api_taxi_front"
     enabled: yes
     state: restarted
