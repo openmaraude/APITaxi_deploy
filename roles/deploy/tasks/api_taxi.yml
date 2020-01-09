@@ -7,7 +7,7 @@
 
 - name: Setup /opt/openmaraude/api_taxi/uwsgi.ini
   template:
-    src: templates/api_taxi/uwsgi.ini
+    src: templates/api_taxi/uwsgi.ini.j2
     dest: /opt/openmaraude/api_taxi/uwsgi.ini
   vars:
     python_module: APITaxi
@@ -19,7 +19,7 @@
 
 - name: Setup /opt/openmaraude/api_taxi/api_taxi.env
   template:
-    src: templates/api_taxi/api_taxi.env
+    src: templates/api_taxi/api_taxi.env.j2
     dest: /opt/openmaraude/api_taxi/api_taxi.env
   vars:
     docker_image: "{{ api_taxi.docker.image }}"
@@ -36,9 +36,9 @@
     state: directory
     mode: '0777'
 
-- name: Setup systemd service file
+- name: Setup APITaxi systemd service file
   template:
-    src: templates/api_taxi/api_taxi.service
+    src: templates/api_taxi/api_taxi.service.j2
     dest: /etc/systemd/system/api_taxi.service
   vars:
     project: api_taxi
