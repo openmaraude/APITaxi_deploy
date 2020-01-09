@@ -20,6 +20,7 @@ ExecStart=/usr/bin/docker run --rm \
                 --env-file=/opt/openmaraude/api_taxi/api_taxi.env \
                 -v /opt/openmaraude/api_taxi/settings.py:/settings.py:ro \
                 -e 'APITAXI_CONFIG_FILE=/settings.py' \
+                -e 'PYTHONUNBUFFERED=1' \
                 "$DOCKER_IMAGE" \
                 celery worker --app=celery_worker.celery -Q send_hail
 
