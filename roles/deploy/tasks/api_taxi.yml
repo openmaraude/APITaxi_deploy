@@ -51,6 +51,8 @@
   template:
     src: templates/api_taxi/api_taxi_worker.service
     dest: /etc/systemd/system/api_taxi_worker.service
+  notify:
+    - Reload systemd
 
 # Required to run handlers now because if file has changed, we want the new
 # file to take effect before the restart, and not after.
