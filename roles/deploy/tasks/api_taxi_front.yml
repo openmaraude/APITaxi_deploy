@@ -41,7 +41,7 @@
     src: templates/api_taxi/api_taxi.service.j2
     dest: /etc/systemd/system/api_taxi_front.service
   vars:
-    project: api_taxi
+    project: api_taxi_front
     host_port: 5000
     host_port_stats: 5007
   notify:
