@@ -71,3 +71,12 @@
     name: "api_taxi_worker"
     enabled: yes
     state: restarted
+  when: redis.role == 'master'
+
+# Worker fails to start on redis slave.
+- name: Disable and stop api_taxi_worker service
+  systemd:
+    name: "api_taxi_worker"
+    enabled: no
+    state: stopped
+  when: redis.role == 'slave'
