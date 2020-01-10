@@ -1,0 +1,5 @@
+- hosts:
+  - taxis01
+  - taxis02
+  roles:
+    - deploy
