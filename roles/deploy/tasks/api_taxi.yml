@@ -56,6 +56,7 @@
   with_items:
     - api_taxi_worker
     - api_taxi_stat_worker
+    - api_taxi_beat_worker
 
 # Required to run handlers now because if file has changed, we want the new
 # file to take effect before the restart, and not after.
@@ -78,6 +79,7 @@
   with_items:
     - api_taxi_worker
     - api_taxi_stat_worker
+    - api_taxi_beat_worker
 
 # Worker fails to start on redis slave.
 - name: Disable and stop api_taxi_worker service (if redis slave)
@@ -89,3 +91,4 @@
   with_items:
     - api_taxi_worker
     - api_taxi_stat_worker
+    - api_taxi_beat_worker
