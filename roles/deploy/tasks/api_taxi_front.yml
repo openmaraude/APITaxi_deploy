@@ -10,7 +10,7 @@
     src: templates/api_taxi/uwsgi.ini.j2
     dest: /opt/openmaraude/api_taxi_front/uwsgi.ini
   vars:
-    python_module: APITaxi
+    python_module: APITaxi_front
 
 - name: Setup /opt/openmaraude/api_taxi_front/settings.py
   template:
@@ -22,8 +22,8 @@
     src: templates/api_taxi/api_taxi.env.j2
     dest: /opt/openmaraude/api_taxi_front/api_taxi_front.env
   vars:
-    docker_image: "{{ api_taxi.docker.image }}"
-    docker_image_version: "{{ api_taxi.docker.version }}"
+    docker_image: "{{ api_taxi_front.docker.image }}"
+    docker_image_version: "{{ api_taxi_front.docker.version }}"
 
 - name: Create directory /var/lib/api_taxi
   file:
