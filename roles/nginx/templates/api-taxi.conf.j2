@@ -132,6 +132,11 @@ server {
         uwsgi_pass api-taxi;
     }
 
+    location /doc/ {
+        expires modified +1w;
+        proxy_pass http://127.0.0.1:8881/;
+    }
+
     location =/zupc/ {
         include /etc/nginx/uwsgi_params;
         uwsgi_pass api-taxi;

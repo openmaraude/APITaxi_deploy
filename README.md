@@ -16,6 +16,7 @@ To deploy code, run:
 $>  ansible-playbook -i inventory.yml deploy.yml -e '{
         api_taxi: {deploy: true},
         api_taxi_front: {deploy: true},
+        api_taxi_swagger: {deploy: true},
         geotaxi: {deploy: true}
     }'
 ```
