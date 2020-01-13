@@ -52,16 +52,9 @@ Edit `inventory.yml`, set `redis.role` to `master` then run the role `redis`.
 To achieve the same result manually, run `/opt/openmaraude/redis/switch-master.sh` to make the slave become master. To make the configuration permanent, edit `/etc/redis/redis.conf` and comment the `slaveof` directive.
 
 
-#### api\_taxi\_worker
+#### APITaxi workers
 
-Service is disabled on the slave because it requires write access to redis. Enable and restart it:
-
-```
-systemctl enable api_taxi_worker
-systemctl start api_taxi_worker
-```
-
-Instead, you can also redeploy `api_taxi_worker` with `ansible-playbook -i inventory.yml deploy.yml -e {api_taxi_worker: {deploy: true}}'`.
+Workers are disabled on the slave because they require write access to redis. You can enable and restart them manually, or preferably redeploy with `ansible-playbook -i inventory.yml deploy.yml -e {api_taxi: {deploy: true}}'`.
 
 #### Networking
 
