@@ -6,6 +6,7 @@
       - nginx
       - certbot
       - python3-certbot-nginx
+      - python3-passlib
 
 - stat: path=/etc/letsencrypt/live/{{ deploy.hostname }}
   register: letsencrypt_directory
@@ -30,3 +31,12 @@
     src: templates/api-taxi.conf.j2
     dest: /etc/nginx/sites-enabled/api-taxi.conf
   notify: Reload nginx
+
+- htpasswd:
+    path: /etc/nginx/admin.passwd
+    name: "{{ item.username }}"
+    password: '{{ item.password }}'
+    owner: root
+    group: www-data
+    mode: 0640
+  with_items: "{{ nginx.admin_users }}"

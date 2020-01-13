@@ -1,0 +1,30 @@
+#
+# This file is installed by Ansible. ** DO NOT ** edit manually.
+#
+
+[Unit]
+Description=Celery flower
+Requires=docker.service
+After=docker.service
+
+[Service]
+Restart=always
+
+EnvironmentFile=/opt/openmaraude/api_taxi/api_taxi.env
+ExecStartPre=/usr/bin/docker pull "$DOCKER_IMAGE"
+ExecStartPre=-/usr/bin/docker rm -f celery_flower
+ExecStart=/usr/bin/docker run --rm \
+                --name celery_flower \
+                --network prod \
+                --env-file=/opt/openmaraude/api_taxi/api_taxi.env \
+                -v /opt/openmaraude/api_taxi/settings.py:/settings.py:ro \
+                -e 'APITAXI_CONFIG_FILE=/settings.py' \
+                -e 'PYTHONUNBUFFERED=1' \
+                -p 5555:5555 \
+                "$DOCKER_IMAGE" \
+                flower -A celery_worker.celery --pidfile=/tmp/celery.pid --url-prefix=flower --address=0.0.0.0
+
+ExecStop=/usr/bin/docker stop celery_flower
+
+[Install]
+WantedBy=multi-user.target
