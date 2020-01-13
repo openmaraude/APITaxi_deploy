@@ -49,10 +49,13 @@
 
 - name: Setup APITaxi worker systemd service file
   template:
-    src: templates/api_taxi/api_taxi_worker.service
-    dest: /etc/systemd/system/api_taxi_worker.service
+    src: templates/api_taxi/{{ item }}.service
+    dest: /etc/systemd/system/{{ item }}.service
   notify:
     - Reload systemd
+  with_items:
+    - api_taxi_worker
+    - api_taxi_stat_worker
 
 # Required to run handlers now because if file has changed, we want the new
 # file to take effect before the restart, and not after.
@@ -66,17 +69,23 @@
     enabled: yes
     state: restarted
 
-- name: Enable and start (or restart) api_taxi_worker service
+- name: Enable and start (or restart) api_taxi_worker service (if redis master)
   systemd:
-    name: "api_taxi_worker"
+    name: "{{ item }}"
     enabled: yes
     state: restarted
   when: redis.role == 'master'
+  with_items:
+    - api_taxi_worker
+    - api_taxi_stat_worker
 
 # Worker fails to start on redis slave.
-- name: Disable and stop api_taxi_worker service
+- name: Disable and stop api_taxi_worker service (if redis slave)
   systemd:
-    name: "api_taxi_worker"
+    name: "{{ item }}"
     enabled: no
     state: stopped
   when: redis.role == 'slave'
+  with_items:
+    - api_taxi_worker
+    - api_taxi_stat_worker

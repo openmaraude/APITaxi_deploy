@@ -1,0 +1,30 @@
+
+#
+# This file is installed by Ansible. ** DO NOT ** edit manually.
+#
+
+[Unit]
+Description=api_taxi stat worker
+Requires=docker.service
+After=docker.service
+
+[Service]
+Restart=always
+
+EnvironmentFile=/opt/openmaraude/api_taxi/api_taxi.env
+ExecStartPre=/usr/bin/docker pull "$DOCKER_IMAGE"
+ExecStartPre=-/usr/bin/docker rm -f api_taxi_stat_worker
+ExecStart=/usr/bin/docker run --rm \
+                --name api_taxi_stat_worker \
+                --network prod \
+                --env-file=/opt/openmaraude/api_taxi/api_taxi.env \
+                -v /opt/openmaraude/api_taxi/settings.py:/settings.py:ro \
+                -e 'APITAXI_CONFIG_FILE=/settings.py' \
+                -e 'PYTHONUNBUFFERED=1' \
+                "$DOCKER_IMAGE" \
+                celery worker --app=celery_worker.celery
+
+ExecStop=/usr/bin/docker stop api_taxi_stat_worker
+
+[Install]
+WantedBy=multi-user.target
