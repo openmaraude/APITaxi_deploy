@@ -13,10 +13,14 @@
     state: directory
 
 - name: Setup /opt/openmaraude/map/params.env
-
   template:
     src: templates/map/map.env.j2
     dest: /opt/openmaraude/map/map.env
+
+# Required to run handlers now because if file has changed, we want the new
+# file to take effect before the restart, and not after.
+- name: Reload systemd if configuration file has changed
+  meta: flush_handlers
 
 # Restart is always mandatory to pull the latest version
 - name: Enable and start (or restart) map service
