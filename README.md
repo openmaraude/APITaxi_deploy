@@ -17,7 +17,8 @@ $>  ansible-playbook -i inventory.yml deploy.yml -e '{
         api_taxi: {deploy: true},
         api_taxi_front: {deploy: true},
         api_taxi_swagger: {deploy: true},
-        geotaxi: {deploy: true}
+        geotaxi: {deploy: true},
+        map: {deploy: true}
     }'
 ```
 
