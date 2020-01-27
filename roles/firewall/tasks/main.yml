@@ -5,18 +5,13 @@
     name:
       - ufw
 
-- name: Enable UFW
+- name: Reset UFW
   ufw:
-    state: enabled
+    state: reset
 
 - name: Set logging to low
   ufw:
     logging: 'low'
-
-- name: Reject incoming
-  ufw:
-    direction: incoming
-    policy: reject
 
 - name: Allow outgoing
   ufw:
@@ -47,3 +42,12 @@
   ufw:
     rule: allow
     port: https
+
+- name: Reject incoming
+  ufw:
+    direction: incoming
+    policy: reject
+
+- name: Enable UFW
+  ufw:
+    state: enabled
