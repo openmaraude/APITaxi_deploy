@@ -4,8 +4,9 @@ postgresql:
   setup_master: false
   setup_slave: false
   setup_initial: false
-
   version: '10'
+  extra_users: []
+  extra_listen_addresses: []
 
 network:
   private_subnet: 10.0.0.0/24

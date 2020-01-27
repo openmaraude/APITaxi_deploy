@@ -109,3 +109,6 @@ hostssl all             all             {{ network.private_subnet }}    scram-sh
 hostssl replication     all             {{ network.private_subnet }}    scram-sha-256
 # Allow authentication from containers
 hostssl all             all             172.30.0.0/24           scram-sha-256
+{% for user in postgresql.extra_users %}
+hostssl {{ user.database }} {{ user.username }} {{ user.address }} scram-sha-256
+{% endfor %}

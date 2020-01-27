@@ -2,7 +2,11 @@
 # File managed by ansible, do not edit manually
 #
 
-listen_addresses = '{{ network.private.ipv4.addr }},172.30.0.1'
+{% if '*' in postgresql.extra_listen_addresses %}
+listen_addresses = '*'
+{% else %}
+listen_addresses = '{{ network.private.ipv4.addr }},172.30.0.1,{{ postgresql.extra_listen_addresses|join(',') }}'
+{% endif %}
 
 # The configuration below is generated with https://pgtune.leopard.in.ua with the following parameters:
 #   DB Version: 10
