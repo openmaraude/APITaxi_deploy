@@ -43,6 +43,13 @@
     rule: allow
     port: https
 
+- name: "{{ item.description }}"
+  ufw:
+    rule: "{{ item.rule }}"
+    port: "{{ item.port }}"
+    src: "{{ item.src }}"
+  with_items: "{{ firewall.extra_rules }}"
+
 - name: Reject incoming
   ufw:
     direction: incoming
