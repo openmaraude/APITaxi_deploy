@@ -16,6 +16,17 @@
     msg: /var/lib/postgresql/{{ postgresql.version }} is already a symlink, this ansible role has already been run on the machine. If wanted, remove postgresql manually before running this role
   when: dir.stat.islnk
 
+# Encryption password should be md5 because pgbouncer doesn't accept
+# scram-sha-256 authentication.
+- name: CREATE ROLE {{ deploy.api_taxi.username }}
+  shell: >
+    sudo -u postgres psql -c "
+      DROP ROLE IF EXISTS {{ deploy.api_taxi.username }};
+      CREATE ROLE {{ deploy.api_taxi.username }} LOGIN;
+      SET password_encryption = 'md5';
+      ALTER USER replicate PASSWORD '{{ deploy.api_taxi.password }}';
+    "
+
 - name: CREATE ROLE replicate
   shell: >
     sudo -u postgres psql -c "
