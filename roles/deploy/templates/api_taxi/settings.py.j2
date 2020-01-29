@@ -10,7 +10,7 @@ SERVER_NAME = '{{ deploy.hostname }}'
 PORT = 80
 
 SECRET_KEY = '{{ deploy.api_taxi.secret_key }}'
-SQLALCHEMY_DATABASE_URI = 'postgresql://{{ deploy.api_taxi.postgresql.username }}:{{ deploy.api_taxi.postgresql.password }}@172.30.0.1/taxis_prod'
+SQLALCHEMY_DATABASE_URI = 'postgresql://{{ deploy.api_taxi.postgresql.username }}:{{ deploy.api_taxi.postgresql.password }}@172.30.0.1:6432/taxis_prod'
 REDIS_URL = "redis://:{{ redis.password }}@172.30.0.1:6379/0"
 REDIS_GEOINDEX = 'geoindex_2'
 REDIS_SAVED_URL = "redis://:{{ redis.password }}@172.30.0.1:6380/0"
