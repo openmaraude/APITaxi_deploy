@@ -25,7 +25,7 @@
     owner: postgres
     group: postgres
     mode: 0640
-  notify: Reload pgbouncer
+  notify: Restart pgbouncer
 
 - name: Setup pgbouncer/userlist.txt
   template:

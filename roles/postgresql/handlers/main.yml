@@ -5,7 +5,7 @@
     name: postgresql
     state: restarted
 
-- name: Reload pgbouncer
+- name: Restart pgbouncer
   systemd:
     name: pgbouncer
-    state: reloaded
+    state: restarted
