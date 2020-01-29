@@ -1,15 +1,39 @@
 ---
 
-- name: Install postgis
+- name: Install postgis and pgbouncer
   apt:
     name:
       - postgis
+      - pgbouncer
 
 - name: Setup PostgreSQL service
   service:
     name: postgresql
     state: started
     enabled: yes
+
+- name: Setup pgbouncer service
+  service:
+    name: pgbouncer
+    state: started
+    enabled: yes
+
+- name: Setup pgbouncer/pgbouncer.ini
+  template:
+    src: templates/pgbouncer.ini.j2
+    dest: /etc/pgbouncer/pgbouncer.ini
+    owner: postgres
+    group: postgres
+    mode: 0640
+  notify: Reload pgbouncer
+
+- name: Setup pgbouncer/userlist.txt
+  template:
+    src: templates/userlist.txt.j2
+    dest: /etc/pgbouncer/userlist.txt
+    owner: postgres
+    group: postgres
+    mode: 0640
 
 - name: Setup pg_hba.conf
   template:
