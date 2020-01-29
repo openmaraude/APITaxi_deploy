@@ -47,7 +47,11 @@ pidfile = /var/run/postgresql/pgbouncer.pid
 ;;;
 
 ; IP address or * which means all IPs
-listen_addr = 127.0.0.1, 172.30.0.1
+{% if '*' in postgresql.extra_listen_addresses %}
+listen_addr = *
+{% else %}
+listen_addr = 127.0.0.1, 172.30.0.1, {{ postgresql.extra_listen_addresses|join(',') }}
+{% endif %}
 listen_port = 6432
 
 ; Unix socket is also used for -R.
