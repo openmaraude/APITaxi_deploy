@@ -4,7 +4,13 @@ Ansible playbooks and roles to deploy the infrastructure behind APITaxi.
 
 The inventory file inventory.yml is encrypted with `ansible-vault`. To run playbooks, create the file `~/vault_password_openmaraude` and ask for the password to someone from the team.
 
-To install servers, run:
+To deploy the infrastructure, first install Ansible dependencies:
+
+```
+$> ansible-galaxy install -r requirements.yml
+```
+
+Then run the playbook:
 
 ```
 $> ansible-playbook -i inventory.yml site.yml
@@ -22,7 +28,7 @@ $>  ansible-playbook -i inventory.yml deploy.yml -e '{
     }'
 ```
 
-To play with inventory:
+To update the inventory:
 
 ```
 $> ansible-vault view inventory.yml
