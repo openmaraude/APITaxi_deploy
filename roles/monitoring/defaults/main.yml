@@ -1,0 +1,8 @@
+---
+
+datadog_config:
+  config_providers:
+    - name: docker
+      polling: true
+  listeners:
+    - name: docker

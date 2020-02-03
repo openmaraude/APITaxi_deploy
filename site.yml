@@ -5,6 +5,7 @@
     - common
     - network
     - firewall
+    - monitoring
 
 - hosts:
     - taxis01
