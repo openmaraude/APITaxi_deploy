@@ -3,3 +3,46 @@
 - name: Import datadog
   include_role:
     name: datadog.datadog
+  vars:
+    datadog_additional_groups:
+      # Required to get containers status
+      - docker
+      # Read HTTP logs
+      - adm
+
+    datadog_config:
+      # Get containers status
+      config_providers:
+        - name: docker
+          polling: true
+
+      listeners:
+        - name: docker
+
+      # logs_enabled must be send to send logs to datadog.
+      logs_enabled: true
+
+    datadog_checks:
+      nginx:
+        instances: []
+        logs:
+          - type: file
+            service: api-taxi
+            path: /var/log/nginx/api-taxi.access.log
+            source: nginx
+            sourcecategory: http_web_access
+
+          - type: file
+            service: api-taxi
+            path: /var/log/nginx/api-taxi.error.log
+            source: nginx
+            sourcecategory: http_web_access
+
+      # By default, datadog attempts to read all mountpoints. Docker nsfs
+      # mountpoints and docker volumes can't be read by dd-agent user
+      # (permission denied). Remove the error message.
+      disk:
+        instances:
+          - mount_point_blacklist:
+              - /var/lib/docker
+              - /run/docker/
