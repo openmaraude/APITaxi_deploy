@@ -70,7 +70,9 @@
 # IF YOU ARE SURE YOU WANT YOUR INSTANCE TO LISTEN TO ALL THE INTERFACES
 # JUST COMMENT THE FOLLOWING LINE.
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+{% if not redis.listen_all_interfaces %}
 bind 127.0.0.1 ::1 {{ network.private.ipv4.addr }} 172.30.0.1
+{% endif %}
 
 
 # Protected mode is a layer of security protection, in order to avoid that

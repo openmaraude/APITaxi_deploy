@@ -1,0 +1,4 @@
+---
+
+redis:
+  listen_all_interfaces: false
