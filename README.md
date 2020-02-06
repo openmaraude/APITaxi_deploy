@@ -58,7 +58,6 @@ Edit `inventory.yml`, set `redis.role` to `master` then run the role `redis`.
 
 To achieve the same result manually, run `/opt/openmaraude/redis/switch-master.sh` to make the slave become master. To make the configuration permanent, edit `/etc/redis/redis.conf` and comment the `slaveof` directive.
 
-
 #### APITaxi workers
 
 Workers are disabled on the slave because they require write access to redis. You can enable and restart them manually, or preferably redeploy with `ansible-playbook -i inventory.yml deploy.yml -e '{api_taxi: {deploy: true}}'`.
@@ -74,3 +73,23 @@ APIs are using services (PostgreSQL, redis, fluent, ...) installed on the same s
 #### Backup
 
 Barman is still trying to backup the old master. Edit `postgresql.master` in `inventory.yml` and run role `barman`.
+
+#### Influxdb
+
+Connect to influx and delete databases:
+
+```
+$> influx
+> show databases;
+> drop database taxis_prod;
+```
+
+Then restore the latest backup from taxis03:
+
+```
+$> ssh taxis03.api.taxi
+# Here, 10.0.0.1 is backup to restore, 10.0.0.2 is the host where to restore the backup
+#> influxd restore -portable -host 10.0.0.2:8088/data/influx_backups/10.0.0.1/<latest backup>
+```
+
+Then, make sure to update taxis03 crontabs to backup the new server.
