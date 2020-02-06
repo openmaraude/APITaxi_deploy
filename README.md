@@ -61,7 +61,7 @@ To achieve the same result manually, run `/opt/openmaraude/redis/switch-master.s
 
 #### APITaxi workers
 
-Workers are disabled on the slave because they require write access to redis. You can enable and restart them manually, or preferably redeploy with `ansible-playbook -i inventory.yml deploy.yml -e {api_taxi: {deploy: true}}'`.
+Workers are disabled on the slave because they require write access to redis. You can enable and restart them manually, or preferably redeploy with `ansible-playbook -i inventory.yml deploy.yml -e '{api_taxi: {deploy: true}}'`.
 
 #### Networking
 
