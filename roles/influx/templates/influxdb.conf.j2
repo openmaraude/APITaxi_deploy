@@ -17,6 +17,7 @@
 
 # Bind address to use for the RPC service for backup and restore.
 # bind-address = "127.0.0.1:8088"
+bind-address = "{{ network.private.ipv4.addr }}:8088"
 
 ###
 ### [meta]

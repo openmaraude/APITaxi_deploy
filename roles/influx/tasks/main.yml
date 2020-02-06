@@ -53,3 +53,27 @@
     src: templates/influxdb.conf.j2
     dest: /etc/influxdb/influxdb.conf
   notify: Restart influxdb
+
+- name: Create directory /data/influx_backups
+  file:
+    path: /data/influx_backups
+    state: directory
+    mode: '0755'
+    owner: influxdb
+    group: influxdb
+
+- name: Create /data/influx_backups/backup
+  template:
+    src: templates/backup
+    dest: /data/influx_backups/backup
+    mode: '0774'
+    owner: influxdb
+    group: influxdb
+
+- name: Create crontab to backup influx
+  cron:
+    name: backup {{ item.host }}
+    hour: '*/4'
+    job: '/data/influx_backups/backup --backup-dir /data/influx_backups/ --host {{ item.host }} --max-backups 64 > /dev/null 2>&1 || true'
+    user: influxdb
+  with_items: "{{ influx.backups }}"
