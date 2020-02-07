@@ -73,6 +73,7 @@
 - name: Create crontab to backup influx
   cron:
     name: backup {{ item.host }}
+    minute: '0'
     hour: '*/4'
     job: '/data/influx_backups/backup --backup-dir /data/influx_backups/ --host {{ item.host }} --max-backups 64 > /dev/null 2>&1 || true'
     user: influxdb
