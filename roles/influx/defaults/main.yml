@@ -2,3 +2,6 @@
 
 influx:
   backups: []
+  auth_enabled: true
+  # Set to true to create users in influx
+  bootstrap: false

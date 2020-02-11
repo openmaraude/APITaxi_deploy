@@ -78,3 +78,9 @@
     job: '/data/influx_backups/backup --backup-dir /data/influx_backups/ --host {{ item.host }} --max-backups 64 > /dev/null 2>&1 || true'
     user: influxdb
   with_items: "{{ influx.backups }}"
+
+- name: Create users
+  include_role:
+    name: influx
+    tasks_from: bootstrap
+  when: influx.bootstrap

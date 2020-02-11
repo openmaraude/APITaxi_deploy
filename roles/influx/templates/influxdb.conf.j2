@@ -261,13 +261,17 @@ bind-address = "{{ network.private.ipv4.addr }}:8088"
   bind-address = ":8086"
 
   # Determines whether user authentication is enabled over HTTP/HTTPS.
-  # auth-enabled = false
+{% if influx.auth_enabled %}
+  auth-enabled = true
+{% else %}
+  auth-enabled = false
+{% endif %}
 
   # The default realm sent back when issuing a basic auth challenge.
   # realm = "InfluxDB"
 
   # Determines whether HTTP request logging is enabled.
-  log-enabled = false
+  log-enabled = true
 
   # Determines whether the HTTP write request logs should be suppressed when the log is enabled.
   # suppress-write-log = false
@@ -278,7 +282,7 @@ bind-address = "{{ network.private.ipv4.addr }}:8088"
   #
   # If influxd is unable to access the specified path, it will log an error and fall back to writing
   # the request log to stderr.
-  # access-log-path = ""
+  access-log-path = "/var/log/influxdb/http.log"
 
   # Filters which requests should be logged. Each filter is of the pattern NNN, NNX, or NXX where N is
   # a number and X is a wildcard for any number. To filter all 5xx responses, use the string 5xx.

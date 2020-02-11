@@ -1,0 +1,55 @@
+---
+
+- name: Install python3-influxdb
+  apt:
+    name:
+      - python3-influxdb
+
+# Disable authentication
+- name: Disable influxdb authentication
+  template:
+    src: templates/influxdb.conf.j2
+    dest: /etc/influxdb/influxdb.conf
+  vars:
+    influx:
+      auth_enabled: false
+  register: influxdb_conf
+
+# Restart influxdb and wait_for it to be ready to accept connections if
+# authentication was not already disabled
+- name: Force restart influxdb
+  service:
+    name: influxdb
+    state: restarted
+  when: influxdb_conf.changed
+
+- name: Wait for port 8086 to become open
+  wait_for:
+    port: 8086
+    delay: 5
+  when: influxdb_conf.changed
+
+- name: Create database
+  influxdb_database:
+      database_name: taxis_prod
+
+- name: Create admin user
+  influxdb_user:
+    user_name: "{{ influx.admin_username }}"
+    user_password: "{{ influx.admin_password }}"
+    admin: yes
+
+- name: Create admin user
+  influxdb_user:
+    user_name: "{{ influx.api_username }}"
+    user_password: "{{ influx.api_password }}"
+    admin: false
+    grants:
+      - database: 'taxis_prod'
+        privilege: 'ALL'
+
+- name: Restore influxdb authentication
+  template:
+    src: templates/influxdb.conf.j2
+    dest: /etc/influxdb/influxdb.conf
+  notify: Restart influxdb
