@@ -76,20 +76,15 @@ Barman is still trying to backup the old master. Edit `postgresql.master` in `in
 
 #### Influxdb
 
-Connect to influx and delete databases:
 
-```
-$> influx
-> show databases;
-> drop database taxis_prod;
-```
-
-Then restore the latest backup from taxis03:
+From the backup server taxis03, delete the target database and restore it from the latest backup:
 
 ```
 $> ssh taxis03.api.taxi
+# Credentials are stored in inventory.yml. To check, run `ansible-vault view inventory.yml`
+#> influx -host 10.0.0.2 -username xxx -password yyy -execute 'drop database taxis_prod'
 # Here, 10.0.0.1 is backup to restore, 10.0.0.2 is the host where to restore the backup
-#> influxd restore -portable -host 10.0.0.2:8088/data/influx_backups/10.0.0.1/<latest backup>
+#> influxd restore -portable -host 10.0.0.2:8088 /data/influx_backups/10.0.0.1/<latest backup>
 ```
 
-Then, make sure to update taxis03 crontabs to backup the new server.
+Then, make sure to update taxis03 crontabs to backup the new server instead of the failing one.
