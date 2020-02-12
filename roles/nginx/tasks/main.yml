@@ -8,13 +8,6 @@
       - python3-certbot-nginx
       - python3-passlib
 
-- stat: path=/etc/letsencrypt/live/{{ deploy.hostname }}
-  register: letsencrypt_directory
-
-- fail:
-    msg: "Letsencrypt certificates must be installed manually for {{ deploy.hostname }}. Run `certbot --nginx`, or copy them from the master server (if this machine is the slave)."
-  when: not letsencrypt_directory.stat.exists
-
 - name: Generate /etc/ssl/dhparams.pem
   openssl_dhparam:
     path: /etc/ssl/dhparam.pem
@@ -32,6 +25,12 @@
     dest: /etc/nginx/sites-enabled/api-taxi.conf
   notify: Reload nginx
 
+- name: Setup /etc/nginx/sites-enabled/grafana.conf
+  template:
+    src: templates/grafana.conf.j2
+    dest: /etc/nginx/sites-enabled/grafana.conf
+  notify: Reload nginx
+
 - htpasswd:
     path: /etc/nginx/admin.passwd
     name: "{{ item.username }}"
@@ -40,3 +39,17 @@
     group: www-data
     mode: 0640
   with_items: "{{ nginx.admin_users }}"
+
+- stat: path=/etc/letsencrypt/live/{{ deploy.hostname }}
+  register: letsencrypt_deploy_directory
+
+- fail:
+    msg: "Letsencrypt certificates must be installed manually for {{ deploy.hostname }}. Run `certbot --nginx`, or copy them from the master server (if this machine is the slave). If this is a first installation, you might need to comment SSL configuration from nginx conf."
+  when: not letsencrypt_deploy_directory.stat.exists
+
+- stat: path=/etc/letsencrypt/live/{{ grafana.hostname }}
+  register: letsencrypt_grafana_directory
+
+- fail:
+    msg: "Letsencrypt certificates must be installed manually for {{ grafana.hostname }}. Run `certbot --nginx`, or copy them from the master server (if this machine is the slave). If this is a first installation, you might need to comment SSL configuration from nginx conf."
+  when: not letsencrypt_grafana_directory.stat.exists

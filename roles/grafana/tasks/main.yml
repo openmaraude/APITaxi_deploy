@@ -1,0 +1,20 @@
+---
+
+- name: Setup grafana
+  include_role:
+    name: cloudalchemy.grafana
+  vars:
+    grafana_database:
+      type: postgres
+      host: "{{ postgresql.master }}:5432"
+      user: "{{ grafana.postgresql.username }}"
+      password: "{{ grafana.postgresql.password }}"
+      name: grafana
+
+    grafana_security:
+      # Should the provisioning be kept synced. If true, previous provisioned objects will be removed if not referenced anymore.
+      grafana_provisioning_synced: true
+      grafana_instance: "{{ grafana.hostname }}"
+      grafana_url: "https://{{ grafana.hostname }}"
+      admin_user: "{{ grafana.admin_username }}"
+      admin_password: "{{ grafana.admin_password }}"

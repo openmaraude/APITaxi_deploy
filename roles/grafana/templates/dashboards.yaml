@@ -1,0 +1,24 @@
+#
+# File managed by ansible, do not edit manually
+#
+
+apiVersion: 1
+
+providers:
+  # <string> an unique provider name
+- name: 'APITaxi dashboards'
+  # <string, required> name of the dashboard folder. Required
+  folder: 'api_taxi'
+  # <string, required> provider type. Required
+  type: file
+  # <bool> disable dashboard deletion
+  disableDeletion: true
+  # <bool> enable dashboard editing
+  editable: false
+  # <int> how often Grafana will scan for changed dashboards
+  updateIntervalSeconds: 10
+  # <bool> allow updating provisioned dashboards from the UI
+  allowUiUpdates: false
+  options:
+    # <string, required> path to dashboard files on disk. Required
+    path: /var/lib/grafana/dashboards
