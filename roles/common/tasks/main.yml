@@ -30,6 +30,7 @@
       - opensmtpd
       - docker-ce
       - python3-pip
+      - jq
 
 - name: Setup /etc/vim/vimrc.local
   template:
