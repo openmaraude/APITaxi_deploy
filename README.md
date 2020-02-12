@@ -88,3 +88,29 @@ $> ssh taxis03.api.taxi
 ```
 
 Then, make sure to update taxis03 crontabs to backup the new server instead of the failing one.
+
+# PostgreSQL backups
+
+PostgreSQL is backup with barman. To list backups, run `barman list-backup pg` from taxis03.api.taxi.
+
+To explore the concent of a backup, run the following commands:
+
+```
+# Display backup details
+$> barman show-backup pg <backup id>
+$> barman recover pg <backup id> /var/lib/barman/mybackup
+
+# From another shell
+docker run --rm -ti --name wip postgres:10
+
+# From first shell, get postgresql.conf and pg_hba from a standard image
+$> cd /var/lib/barman/mybackup
+$> docker cp wip:/var/lib/postgresql/data/postgresql.conf .
+$> docker cp wip:/var/lib/postgresql/data/pg_hba.conf .
+
+# Quit docker from the first shell, then run a PostgreSQL container with the backup as data directory
+$> docker run --rm -ti --name mybackup -v /var/lib/barman/mybackup/:/var/lib/postgresql/data/ postgres:10
+
+# Connect to PostgreSQL from another shell
+$> docker exec -ti mybackup psql -U postgres
+```
