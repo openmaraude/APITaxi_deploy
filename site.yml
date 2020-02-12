@@ -34,3 +34,10 @@
     - taxis03
   roles:
     - barman
+
+# Grafana needs PostgreSQL
+- hosts:
+    - taxis01
+    - taxis02
+  roles:
+    - grafana
