@@ -18,13 +18,13 @@
 
 # Encryption password should be md5 because pgbouncer doesn't accept
 # scram-sha-256 authentication.
-- name: CREATE ROLE {{ deploy.api_taxi.username }}
+- name: CREATE ROLE {{ deploy.api_taxi.postgresql.username }}
   shell: >
     sudo -u postgres psql -c "
-      DROP ROLE IF EXISTS {{ deploy.api_taxi.username }};
-      CREATE ROLE {{ deploy.api_taxi.username }} LOGIN;
+      DROP ROLE IF EXISTS {{ deploy.api_taxi.postgresql.username }};
+      CREATE ROLE {{ deploy.api_taxi.postgresql.username }} LOGIN;
       SET password_encryption = 'md5';
-      ALTER USER replicate PASSWORD '{{ deploy.api_taxi.password }}';
+      ALTER USER {{ deploy.api_taxi.postgresql.username }} PASSWORD '{{ deploy.api_taxi.postgresql.password }}';
     "
 
 - name: CREATE ROLE replicate
