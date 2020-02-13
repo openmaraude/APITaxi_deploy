@@ -17,6 +17,11 @@
     src: templates/geotaxi/geotaxi.env.j2
     dest: /opt/openmaraude/geotaxi/geotaxi.env
 
+# Required to run handlers now because if file has changed, we want the new
+# file to take effect before the restart, and not after.
+- name: Reload systemd if configuration file has changed
+  meta: flush_handlers
+
 # Restart is always mandatory to pull the latest version
 - name: Enable and start (or restart) geotaxi service
   systemd:

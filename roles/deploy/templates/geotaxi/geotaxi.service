@@ -16,7 +16,7 @@ ExecStartPre=-/usr/bin/docker rm -f geotaxi
 ExecStart=/usr/bin/docker run --rm \
                 --name geotaxi \
                 --network prod \
-                -p 8080:8080 \
+                -p 80:8080/udp \
                 --env-file=/opt/openmaraude/geotaxi/geotaxi.env \
                 "$DOCKER_IMAGE"
 
