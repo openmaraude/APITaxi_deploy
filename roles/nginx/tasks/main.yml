@@ -8,15 +8,10 @@
       - python3-certbot-nginx
       - python3-passlib
 
-- name: Generate /etc/ssl/dhparams.pem
-  openssl_dhparam:
-    path: /etc/ssl/dhparam.pem
-  notify: Reload nginx
-
-- name: Remove default nginx configuration file
-  file:
-    path: /etc/nginx/sites-enabled/default
-    state: absent
+- name: Setup /etc/nginx/sites-enabled/default.conf
+  template:
+    src: templates/default.conf.j2
+    dest: /etc/nginx/sites-enabled/default.conf
   notify: Reload nginx
 
 - name: Setup /etc/nginx/sites-enabled/api-taxi.conf
