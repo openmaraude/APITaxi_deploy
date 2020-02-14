@@ -87,6 +87,12 @@
       - subnet: 172.30.0.0/24
         gateway: 172.30.0.1
 
+- name: Create /etc/docker/daemon.json
+  template:
+    src: templates/docker/daemon.json
+    dest: /etc/docker/daemon.json
+  notify: Restart docker
+
 - name: Create /data/openmaraude directory
   file:
     path: /data/openmaraude/
