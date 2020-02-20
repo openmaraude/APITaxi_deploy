@@ -115,3 +115,9 @@
   template:
     src: templates/authorized_keys.j2
     dest: /root/.ssh/authorized_keys
+
+- name: Update root password
+  user:
+    name: root
+    update_password: always
+    password: "{{ root_password }}"
