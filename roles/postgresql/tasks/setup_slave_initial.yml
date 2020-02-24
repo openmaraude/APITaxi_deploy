@@ -39,7 +39,7 @@
     state: link
 
 - name: Call pg_basebackup
-  command: pg_basebackup -h {{ postgresql_master }} -D /var/lib/postgresql/{{ postgresql.version }}/main/ -P -U replicate --wal-method=stream
+  command: pg_basebackup -h {{ postgresql.master }} -D /var/lib/postgresql/{{ postgresql.version }}/main/ -P -U replicate --wal-method=stream
   environment:
     PGPASSWORD: "{{ postgresql.replication_password }}"
 
