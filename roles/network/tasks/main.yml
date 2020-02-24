@@ -67,14 +67,14 @@
     name: dhclient6-failover
     daemon-reload: yes
     enabled: no
-  when: network.setup_failover and network.failover.ipv4.addr not in ansible_all_ipv4_addresses
+  when: inventory_hostname != network.master
 
 - name: Enable service dhclient6-failover (since this server is the master)
   systemd:
     name: dhclient6-failover
     daemon-reload: yes
     enabled: yes
-  when: network.setup_failover and network.failover.ipv4.addr in ansible_all_ipv4_addresses
+  when: inventory_hostname == network.master
 
 - name: Create /opt/openmaraude/network directory
   file:
