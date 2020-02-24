@@ -8,6 +8,12 @@
       - python3-certbot-nginx
       - python3-passlib
 
+- name: Make sure /etc/nginx/sites-enabled/default is absent
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify: Reload nginx
+
 - name: Setup /etc/nginx/sites-enabled/default.conf
   template:
     src: templates/default.conf.j2
