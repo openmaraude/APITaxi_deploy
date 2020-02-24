@@ -1,0 +1,43 @@
+---
+
+- hosts: all
+  roles:
+    - common
+    - network
+    - firewall
+    - monitoring
+
+- hosts:
+    - dev01
+    - dev02
+  roles:
+    - fluent
+    - influx
+    - nginx
+
+# Install postgresql/redis master
+- hosts:
+    - dev01
+  roles:
+    - postgresql
+    - redis
+
+# Install postgresql/redis slave
+- hosts:
+    - dev02
+  roles:
+    - postgresql
+    - redis
+
+# Install barman
+- hosts:
+    - dev02
+  roles:
+    - barman
+
+# Grafana needs PostgreSQL
+- hosts:
+    - dev01
+    - dev02
+  roles:
+    - grafana
