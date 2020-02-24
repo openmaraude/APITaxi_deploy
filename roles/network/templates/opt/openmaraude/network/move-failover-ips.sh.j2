@@ -19,7 +19,7 @@ DHCLIENT_CONF=/etc/dhcp/dhclient6-failover.conf
 DHCLIENT_PIDFILE=/var/run/dhclient6-failover.pid
 DHCLIENT_LEASES_FILE=/var/lib/dhcp/dhclient6-failover.leases
 
-SYSTEMD_NETWORK_FILE=/etc/systemd/network/enp1s0f0.network.d/failover.conf
+SYSTEMD_NETWORK_FILE=/etc/systemd/network/{{ network.public.iface }}.network.d/failover.conf
 
 usage() {
   echo "Usage: $0 master|stop" >&2
