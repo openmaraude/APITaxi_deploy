@@ -3,5 +3,8 @@ network:
     iface: enp1s0f0
 
   private:
+    # In case the host has only one interface, set setup_gre to true to create
+    # a "fake" interface.
+    setup_gre: false
     iface: enp1s0f1
     vlan: 1337

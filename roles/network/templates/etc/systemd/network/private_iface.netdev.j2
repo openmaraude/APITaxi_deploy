@@ -1,0 +1,10 @@
+#
+# This file is installed by Ansible. ** DO NOT ** edit manually.
+#
+
+[NetDev]
+Name={{ network.private.iface }}
+Kind=gretap
+
+[Tunnel]
+Remote={{ network.private.gre_remote }}

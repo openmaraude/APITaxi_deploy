@@ -3,6 +3,10 @@
     name: netplan.io
     state: absent
 
+# For some reasons, it might be necessary to run
+# `systemctl enable systemd-networkd` manually because the statement below
+# doesn't work on first install...
+# It might be related to https://github.com/ansible/ansible/issues/39116
 - name: Enable systemd-networkd
   systemd:
     name: systemd-networkd
@@ -20,6 +24,13 @@
     state: directory
     mode: '0755'
   when: network.setup_failover
+
+- name: Create GRE net device {{ network.private.iface }}
+  template:
+    src: templates/etc/systemd/network/private_iface.netdev.j2
+    dest: /etc/systemd/network/{{ network.private.iface }}.netdev
+  notify: Restart systemd-networkd
+  when: network.private.setup_gre
 
 - name: Create network configuration for {{ network.private.iface }}
   template:
@@ -78,3 +89,6 @@
     dest: /opt/openmaraude/network/move-failover-ips.sh
     mode: '0700'
   when: network.setup_failover
+
+- debug: msg="On first run, you need to reboot to have the GRE tunnel working"
+  when: network.private.setup_gre

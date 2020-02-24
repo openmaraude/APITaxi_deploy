@@ -7,3 +7,6 @@ Name={{ network.public.iface }}
 
 [Network]
 DHCP=ipv4
+{% if network.private.setup_gre %}
+Tunnel={{ network.private.iface }}
+{% endif %}

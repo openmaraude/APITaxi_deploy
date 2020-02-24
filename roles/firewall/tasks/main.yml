@@ -60,6 +60,13 @@
     direction: incoming
     policy: reject
 
+# Required for dev servers to allow GRE traffic
+- name: Load nf_conntrack_pptp on boot to allow GRE traffic
+  copy:
+    dest: /etc/modules-load.d/nf_conntrack_pptp.conf
+    content: nf_conntrack_pptp
+  when: network.private.setup_gre
+
 - name: Enable UFW
   ufw:
     state: enabled
