@@ -2,6 +2,6 @@
 # This file is installed by Ansible. ** DO NOT ** edit manually.
 #
 
-interface "enp1s0f0" {
+interface "{{ network.public.iface }}" {
    send dhcp6.client-id {{ network.failover.ipv6.DUID }};
 }
