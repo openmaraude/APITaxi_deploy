@@ -12,6 +12,7 @@ upstream api-taxi {
 
 server {
     listen 80;
+    listen [::]:80;
     server_name {{ deploy.hostname }};
     return 301 https://$server_name$request_uri;
 }
