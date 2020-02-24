@@ -50,6 +50,11 @@
     src: "{{ item.src }}"
   with_items: "{{ firewall.extra_rules }}"
 
+- name: Allow incoming traffic for DHCPv6
+  ufw:
+    rule: allow
+    port: 546
+
 - name: Reject incoming
   ufw:
     direction: incoming
