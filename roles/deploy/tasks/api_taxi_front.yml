@@ -42,8 +42,8 @@
     dest: /etc/systemd/system/api_taxi_front.service
   vars:
     project: api_taxi_front
-    host_port: 5000
-    host_port_stats: 5007
+    host_port: 8327
+    host_port_stats: 8328
   notify:
     - Reload systemd
 
