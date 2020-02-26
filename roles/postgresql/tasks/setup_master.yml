@@ -1,10 +1,106 @@
 ---
 
-- name: Setup initial master
-  include_role:
+# Check if /var/lib/postgresql/{{ postgresql_version }} is already a symlink
+- name: stat /var/lib/postgresql/{{ postgresql.version }}
+  stat:
+    path: /var/lib/postgresql/{{ postgresql.version }}
+  register: dir
+
+# Encryption password should be md5 because pgbouncer doesn't accept
+# scram-sha-256 authentication.
+- name: CREATE ROLE {{ deploy.api_taxi.postgresql.username }}
+  shell: >
+    cd /tmp && sudo -u postgres psql -c "
+    DO \$\$
+    BEGIN
+        IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '{{ deploy.api_taxi.postgresql.username }}') THEN
+            SET password_encryption = 'md5';
+            CREATE ROLE {{ deploy.api_taxi.postgresql.username }} WITH LOGIN PASSWORD '{{ deploy.api_taxi.postgresql.password }}';
+        END IF;
+    END
+    \$\$;
+    "
+
+# Encryption password should be md5 because pgbouncer doesn't accept
+# scram-sha-256 authentication.
+- name: CREATE ROLE {{ grafana.postgresql.username }}
+  shell: >
+    cd /tmp && sudo -u postgres psql -c "
+    DO \$\$
+    BEGIN
+        IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '{{ grafana.postgresql.username }}') THEN
+            SET password_encryption = 'md5';
+            CREATE ROLE {{ grafana.postgresql.username }} WITH LOGIN PASSWORD '{{ grafana.postgresql.password }}';
+        END IF;
+    END
+    \$\$;
+    "
+
+- name: CREATE ROLE replicate
+  shell: >
+    cd /tmp && sudo -u postgres psql -c "
+    DO \$\$
+    BEGIN
+        IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'replicate') THEN
+            SET password_encryption = 'scram-sha-256';
+            CREATE ROLE replicate WITH REPLICATION LOGIN PASSWORD '{{ postgresql.replication_password }}';
+        END IF;
+    END
+    \$\$;
+    "
+
+- name: CREATE ROLE barman
+  shell: >
+    cd /tmp && sudo -u postgres psql -c "
+    DO \$\$
+    BEGIN
+        IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'barman') THEN
+            SET password_encryption = 'scram-sha-256';
+            CREATE ROLE barman SUPERUSER LOGIN PASSWORD '{{ postgresql.barman_password }}';
+        END IF;
+    END
+    \$\$;
+    "
+
+- name: CREATE ROLE barman_streaming
+  shell: >
+    cd /tmp && sudo -u postgres psql -c "
+    DO \$\$
+    BEGIN
+        IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'barman_streaming') THEN
+            SET password_encryption = 'scram-sha-256';
+            CREATE ROLE barman_streaming WITH REPLICATION LOGIN PASSWORD '{{ postgresql.barman_password }}';
+        END IF;
+    END
+    \$\$;
+    "
+
+### If it is a new installation (ie. /var/lib/postgresql/<version> is not a
+### symlink), create directory /data/postgresql and move data there
+- name: Stop PostgreSQL
+  systemd:
     name: postgresql
-    tasks_from: setup_master_initial
-  when: postgresql.setup_initial
+    state: stopped
+  when: not dir.stat.islnk
+
+- name: Create directory /data/postgresql
+  file:
+    path: /data/postgresql
+    state: directory
+    mode: '0755'
+  when: not dir.stat.islnk
+
+- name: Move /var/lib/postgresql/{{ postgresql.version }} to /data/postgresql
+  command: mv /var/lib/postgresql/{{ postgresql.version }} /data/postgresql/
+  when: not dir.stat.islnk
+
+- name: Create symlink /data/postgresql/{{ postgresql.version }} /var/lib/postgresql/{{ postgresql.version }}
+  file:
+    src: /data/postgresql/{{ postgresql.version }}
+    dest: /var/lib/postgresql/{{ postgresql.version }}
+    state: link
+  when: not dir.stat.islnk
+### Done!
 
 - name: Create /etc/postgresql/{{ postgresql.version }}/main/conf.d/replication.conf
   template:

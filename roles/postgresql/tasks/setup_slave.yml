@@ -1,10 +1,66 @@
 ---
 
-- name: Setup initial slave
-  include_role:
+- name: stat /data/postgresql/{{ postgresql.version }}
+  stat:
+    path: /data/postgresql/{{ postgresql.version }}
+  register: datadir
+
+### If /data/postgresql/<version> does not exist, create slave from master
+- name: Stop PostgreSQL
+  systemd:
     name: postgresql
-    tasks_from: setup_slave_initial
-  when: postgresql.setup_initial
+    state: stopped
+  when: not datadir.stat.exists
+
+- name: Create /etc/postgresql/{{ postgresql.version }}/main/conf.d/slave.conf
+  template:
+    src: templates/slave.conf
+    dest: /etc/postgresql/{{ postgresql.version }}/main/conf.d/slave.conf
+  when: not datadir.stat.exists
+
+- name: Create directory /data/postgresql/{{ postgresql.version }}/main
+  file:
+    path: /data/postgresql/{{ postgresql.version }}/main
+    state: directory
+    recurse: true
+    mode: '0700'
+  when: not datadir.stat.exists
+
+- name: Remove directory /var/lib/postgresql/{{ postgresql.version }}
+  file:
+    path: /var/lib/postgresql/{{ postgresql.version }}
+    state: absent
+  when: not datadir.stat.exists
+
+- name: Create symlink /data/postgresql/{{ postgresql.version}} /var/lib/postgresql/{{ postgresql.version }}
+  file:
+    src: /data/postgresql/{{ postgresql.version }}
+    dest: /var/lib/postgresql/{{ postgresql.version }}
+    state: link
+  when: not datadir.stat.exists
+
+- name: Call pg_basebackup
+  command: pg_basebackup -h {{ postgresql.master }} -D /var/lib/postgresql/{{ postgresql.version }}/main/ -P -U replicate --wal-method=stream --checkpoint=fast
+  environment:
+    PGPASSWORD: "{{ postgresql.replication_password }}"
+  when: not datadir.stat.exists
+
+- name: Create /var/lib/postgresql/{{ postgresql.version }}/main/recovery.conf
+  template:
+    src: templates/recovery.conf.j2
+    dest: /var/lib/postgresql/{{ postgresql.version }}/main/recovery.conf
+    mode: '0600'
+  when: not datadir.stat.exists
+
+- name: chown /data/postgresql/ to postgres:postgres
+  file:
+    path: /data/postgresql/
+    owner: postgres
+    group: postgres
+    recurse: yes
+    state: directory
+  when: not datadir.stat.exists
+### Slave created!
 
 - name: Start PostgreSQL
   systemd:

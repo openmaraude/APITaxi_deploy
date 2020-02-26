@@ -54,10 +54,10 @@
   include_role:
     name: postgresql
     tasks_from: setup_master
-  when: postgresql.setup_master
+  when: postgresql.role == 'master'
 
 - name: Setup slave
   include_role:
     name: postgresql
     tasks_from: setup_slave
-  when: postgresql.setup_slave
+  when: postgresql.role == 'slave'

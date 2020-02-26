@@ -3,10 +3,6 @@
 postgresql:
   # Set to "low" on dev servers to reduce hardware requirements
   server_type: high
-
-  setup_master: false
-  setup_slave: false
-  setup_initial: false
   version: '10'
   extra_users: []
   extra_listen_addresses: []
