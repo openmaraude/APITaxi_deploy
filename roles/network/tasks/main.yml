@@ -90,5 +90,14 @@
     mode: '0700'
   when: network.setup_failover
 
-- debug: msg="On first run, you need to reboot to have the GRE tunnel working"
+# On first run, systemd-networkd is not enabled. Run command manually
+- name: Force enable systemd-networkd
+  shell: systemctl enable systemd-networkd
+
+- debug: msg="On first run, you need to reboot to have the GRE tunnel working (probably due to a bug in systemd). If the next task fails, reboot and run the playbook again."
+  when: network.private.setup_gre
+
+# This command fails on first run if systemd-networkd didn't created the interface. If it fails, reboot is required as specified above.
+- name: Check if GRE interface is created
+  shell: ip link show {{ network.private.iface }}
   when: network.private.setup_gre
