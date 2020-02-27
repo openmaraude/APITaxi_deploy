@@ -38,6 +38,11 @@
 # Grafana needs PostgreSQL
 - hosts:
     - dev01
+  roles:
+    - grafana
+
+# Install first on master (to create database), then on slave
+- hosts:
     - dev02
   roles:
     - grafana
