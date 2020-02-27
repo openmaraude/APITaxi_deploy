@@ -1,5 +1,19 @@
 ---
 
+# Required for postgresql_db
+- name: Install python3-psycopg2
+  package:
+    name:
+      - python3-psycopg2
+  when: postgresql.role == 'master'
+
+- name: Create database grafana
+  become: true
+  become_user: postgres
+  postgresql_db:
+    name: grafana
+  when: postgresql.role == 'master'
+
 - name: Setup grafana
   include_role:
     name: cloudalchemy.grafana
