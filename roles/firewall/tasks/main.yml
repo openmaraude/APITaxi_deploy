@@ -53,7 +53,7 @@
 - name: Allow incoming traffic for DHCPv6
   ufw:
     rule: allow
-    port: 546
+    port: '546'
 
 - name: Reject incoming
   ufw:
