@@ -72,7 +72,12 @@
   systemd:
     name: systemd-modules-load
     state: restarted
-  when: pptp_kernel_module.changed
+  when: network.private.setup_gre and pptp_kernel_module.changed
+
+# To allow GRE communication, both peers must initiate a connection to fill conntrack table.
+- name: Fill conntrack table
+  shell: ping -c 1 {{ network.private.gre_remote }} || exit 0
+  when: network.private.setup_gre
 
 - name: Enable UFW
   ufw:
