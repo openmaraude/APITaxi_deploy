@@ -66,6 +66,13 @@
     dest: /etc/modules-load.d/nf_conntrack_pptp.conf
     content: nf_conntrack_pptp
   when: network.private.setup_gre
+  register: pptp_kernel_module
+
+- name: Restart systemd-modules-load
+  systemd:
+    name: systemd-modules-load
+    state: restarted
+  when: pptp_kernel_module.changed
 
 - name: Enable UFW
   ufw:
