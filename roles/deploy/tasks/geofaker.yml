@@ -38,3 +38,4 @@
     name: geofaker
     enabled: yes
     state: restarted
+  when: redis.role == 'master'
