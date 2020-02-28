@@ -67,14 +67,14 @@
     name: dhclient6-failover
     daemon-reload: yes
     enabled: no
-  when: inventory_hostname != network.master
+  when: network.setup_failover and inventory_hostname != network.master
 
 - name: Enable service dhclient6-failover (since this server is the master)
   systemd:
     name: dhclient6-failover
     daemon-reload: yes
     enabled: yes
-  when: inventory_hostname == network.master
+  when: network.setup_failover and inventory_hostname == network.master
 
 - name: Create /opt/openmaraude/network directory
   file:
