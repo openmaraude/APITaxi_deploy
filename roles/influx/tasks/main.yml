@@ -83,4 +83,3 @@
   include_role:
     name: influx
     tasks_from: bootstrap
-  when: influx.bootstrap
