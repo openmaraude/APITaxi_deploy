@@ -50,6 +50,10 @@ APITaxi infrastructure is made of three servers hosted on [Online.net](https://w
 - taxis02: "slave" server hosting applications, PostgreSQL slave and redis slave
 - taxis03: "admin" server with barman (to backup PostgreSQL)
 
+And of a +- similar development enviornment:
+
+- dev01: master server
+- dev02: slave/backup server
 
 # Failover
 
