@@ -12,6 +12,12 @@
 
 - set_fact:
     influx_admin_exists: "{{ influx_admin_exists_command.stdout_lines|join('') == 'yes' }}"
+  when: not ansible_check_mode
+
+# Always set to true when --check is provided
+- set_fact:
+    influx_admin_exists: true
+  when: ansible_check_mode
 
 # Disable authentication
 - name: Disable influxdb authentication
