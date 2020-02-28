@@ -29,3 +29,9 @@
     name: deploy
     tasks_from: map.yml
   when: map.deploy
+
+- name: Import role to deploy geofaker
+  include_role:
+    name: deploy
+    tasks_from: geofaker
+  when: geofaker.deploy

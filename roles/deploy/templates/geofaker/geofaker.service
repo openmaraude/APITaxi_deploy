@@ -1,0 +1,26 @@
+#
+# This file is installed by Ansible. ** DO NOT ** edit manually.
+#
+
+[Unit]
+Description=Geofaker
+Requires=docker.service
+After=docker.service
+
+[Service]
+Restart=always
+
+EnvironmentFile=/opt/openmaraude/geofaker/geofaker.env
+ExecStartPre=/usr/bin/docker pull "$DOCKER_IMAGE"
+ExecStartPre=-/usr/bin/docker rm -f geofaker
+ExecStart=/usr/bin/docker run --rm \
+                --name geofaker \
+                --network prod \
+                -v /opt/openmaraude/geofaker/config.csv:/config.csv:ro \
+                --env-file=/opt/openmaraude/geofaker/geofaker.env \
+                "$DOCKER_IMAGE" /config.csv /paris-small.gpx
+
+ExecStop=/usr/bin/docker stop geofaker
+
+[Install]
+WantedBy=multi-user.target

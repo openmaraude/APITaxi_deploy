@@ -29,3 +29,9 @@ map:
   docker:
     version: latest
     image: openmaraude/map
+
+geofaker:
+  deploy: false
+  docker:
+    version: latest
+    image: openmaraude/geofaker

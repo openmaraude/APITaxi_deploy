@@ -1,0 +1,40 @@
+---
+
+- fail:
+    msg: "geofaker should only be deployed on dev severs"
+  when: inventory_hostname not in ('dev01', 'dev02')
+
+- name: Setup systemd service file
+  template:
+    src: templates/geofaker/geofaker.service
+    dest: /etc/systemd/system/geofaker.service
+  notify:
+    - Reload systemd
+
+- name: Create directory /opt/openmaraude/geofaker
+  file:
+    path: /opt/openmaraude/geofaker
+    state: directory
+
+- name: Setup /opt/openmaraude/geofaker/params.env
+  template:
+    src: templates/geofaker/geofaker.env.j2
+    dest: /opt/openmaraude/geofaker/geofaker.env
+
+
+- name: Setup /opt/openmaraude/geofaker/config.csv
+  template:
+    src: templates/geofaker/config.csv
+    dest: /opt/openmaraude/geofaker/config.csv
+
+# Required to run handlers now because if file has changed, we want the new
+# file to take effect before the restart, and not after.
+- name: Reload systemd if configuration file has changed
+  meta: flush_handlers
+
+# Restart is always mandatory to pull the latest version
+- name: Enable and start (or restart) geofaker service
+  systemd:
+    name: geofaker
+    enabled: yes
+    state: restarted
