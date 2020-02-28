@@ -5,7 +5,7 @@
 {% if '*' in postgresql.extra_listen_addresses %}
 listen_addresses = '*'
 {% else %}
-listen_addresses = '{{ network.private.ipv4.addr }},172.30.0.1{% if postgresql.extra_listen_addresses %},{{ postgresql.extra_listen_addresses|join(',') }}{% endif %}'
+listen_addresses = '127.0.0.1,{{ network.private.ipv4.addr }},172.30.0.1{% if postgresql.extra_listen_addresses %},{{ postgresql.extra_listen_addresses|join(',') }}{% endif %}'
 {% endif %}
 
 {% if postgresql.server_type == 'low' %}
