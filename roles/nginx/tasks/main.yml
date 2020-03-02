@@ -26,6 +26,12 @@
     dest: /etc/nginx/sites-enabled/api-taxi.conf
   notify: Reload nginx
 
+- name: Setup /etc/nginx/sites-enabled/api-taxi-tester.conf
+  template:
+    src: templates/api-taxi-tester.conf.j2
+    dest: /etc/nginx/sites-enabled/api-taxi-tester.conf
+  notify: Reload nginx
+
 - name: Setup /etc/nginx/sites-enabled/grafana.conf
   template:
     src: templates/grafana.conf.j2

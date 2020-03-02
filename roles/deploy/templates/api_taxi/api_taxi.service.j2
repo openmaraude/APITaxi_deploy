@@ -21,7 +21,9 @@ ExecStart=/usr/bin/docker run --rm \
                 --env-file=/opt/openmaraude/{{ project }}/{{ project }}.env \
                 -v /opt/openmaraude/{{ project }}/uwsgi.ini:/uwsgi.ini:ro \
                 -v /opt/openmaraude/{{ project }}/settings.py:/settings.py:ro \
+{% if mount_upload_dir is defined and mount_upload_dir != 'no' %}
                 -v /var/lib/api_taxi/uploads:/uploads \
+{% endif %}
                 -e 'APITAXI_CONFIG_FILE=/settings.py' \
                 "$DOCKER_IMAGE"
 

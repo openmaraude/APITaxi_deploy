@@ -35,3 +35,9 @@
     name: deploy
     tasks_from: geofaker
   when: geofaker.deploy
+
+- name: Import role to deploy APITaxi_tester
+  include_role:
+    name: deploy
+    tasks_from: api_taxi_tester.yml
+  when: api_taxi_tester.deploy
