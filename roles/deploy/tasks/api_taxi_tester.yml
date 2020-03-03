@@ -10,7 +10,7 @@
     src: templates/api_taxi/uwsgi.ini.j2
     dest: /opt/openmaraude/api_taxi_tester/uwsgi.ini
   vars:
-    python_module: APITaxi_tester.front.app
+    python_module: APITaxi_tester.front
 
 - name: Setup /opt/openmaraude/api_taxi_tester/settings.py
   template:
