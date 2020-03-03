@@ -16,6 +16,8 @@
   template:
     src: templates/api_taxi/settings.py.j2
     dest: /opt/openmaraude/api_taxi_tester/settings.py
+  vars:
+    hostname: "tester.{{ deploy.hostname }}"
 
 - name: Setup /opt/openmaraude/api_taxi_tester/api_taxi_tester.env
   template:

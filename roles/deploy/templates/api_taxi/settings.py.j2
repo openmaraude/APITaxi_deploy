@@ -5,8 +5,13 @@
 DEBUG = False
 ENV = 'PROD'
 
+{% if hostname is defined %}
+HOST = '{{ hostname }}'
+SERVER_NAME = '{{ hostname }}'
+{% else %}
 HOST = '{{ deploy.hostname }}'
 SERVER_NAME = '{{ deploy.hostname }}'
+{% endif %}
 PORT = 80
 
 SECRET_KEY = '{{ deploy.api_taxi.secret_key }}'
