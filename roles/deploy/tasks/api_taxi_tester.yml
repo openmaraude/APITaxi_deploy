@@ -14,10 +14,13 @@
 
 - name: Setup /opt/openmaraude/api_taxi_tester/settings.py
   template:
-    src: templates/api_taxi/settings.py.j2
+    src: templates/api_taxi_tester/settings.py.j2
     dest: /opt/openmaraude/api_taxi_tester/settings.py
   vars:
     hostname: "tester.{{ deploy.hostname }}"
+    api_hostname: "{{ deploy.hostname }}"
+    geotaxi_hostname: "geoloc.{{ deploy.hostname }}"
+    geotaxi_port: 80
 
 - name: Setup /opt/openmaraude/api_taxi_tester/api_taxi_tester.env
   template:
