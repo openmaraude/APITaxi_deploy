@@ -2,7 +2,7 @@ Ansible playbooks and roles to deploy the infrastructure behind APITaxi.
 
 # Usage
 
-The inventory file inventory.yml is encrypted with `ansible-vault`. To run playbooks, create the file `~/vault_password_openmaraude` and ask for the password to someone from the team.
+The inventory file inventory.yml is encrypted with `ansible-vault`. To run playbooks, create the file `~/.vault_password_openmaraude` and ask for the password to someone from the team.
 
 By default `git diff`, `git show` and `git log` won't display modifications of the inventory file. Run the following command to uase `ansible-vault` to view differences:
 

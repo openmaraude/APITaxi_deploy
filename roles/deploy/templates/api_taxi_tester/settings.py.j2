@@ -1,0 +1,17 @@
+#
+# This file is installed by Ansible. ** DO NOT ** edit manually.
+#
+
+DEBUG = False
+ENV = 'PROD'
+
+HOST = '{{ hostname }}'
+SERVER_NAME = '{{ hostname }}'
+PORT = 80
+
+CACHE_TYPE = "filesystem"
+CACHE_DIR = "/tmp/flaskcache"
+
+GEOTAXI_PORT = {{ geotaxi_port }}
+GEOTAXI_HOST = '{{ geotaxi_hostname}}'
+API_HOST = 'https://{{ api_hostname }}'
