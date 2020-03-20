@@ -2,10 +2,6 @@
 # This file is installed by Ansible. ** DO NOT ** edit manually.
 #
 
-upstream api-taxi-front {
-    server 127.0.0.1:8327;
-}
-
 upstream api-taxi {
     server 127.0.0.1:8427;
 }
@@ -61,19 +57,8 @@ server {
     access_log  /var/log/nginx/api-taxi.access.log;
     error_log /var/log/nginx/api-taxi.error.log;
 
-    location ~* ^/(index|dash|login|user_key|logout)$ {
-        include /etc/nginx/uwsgi_params;
-        uwsgi_pass api-taxi-front;
-    }
-
-    location ~* ^(/(ads|drivers|index|user)/(_view|form|delete))$ {
-        include /etc/nginx/uwsgi_params;
-        uwsgi_pass api-taxi-front;
-    }
-
     location = / {
-        include /etc/nginx/uwsgi_params;
-        uwsgi_pass api-taxi-front;
+        return 302 https://console.{{ deploy.hostname }};
     }
 
     location ~* ^/(ads|drivers|hails|taxis|vehicles)/$ {
@@ -96,49 +81,9 @@ server {
         uwsgi_pass api-taxi;
     }
 
-    location ~* ^/documentation(/(index|moteur|operateur|reference|examples))?$ {
-        include /etc/nginx/uwsgi_params;
-        uwsgi_pass api-taxi-front;
-    }
-
-    location ~ ^/admin {
-        include /etc/nginx/uwsgi_params;
-        uwsgi_pass api-taxi-front;
-    }
-
-    location = /stats {
-        include /etc/nginx/uwsgi_params;
-        uwsgi_pass api-taxi-front;
-    }
-
-    location = /zupc/_show_temp {
-        include /etc/nginx/uwsgi_params;
-        uwsgi_pass api-taxi-front;
-    }
-
-    location /static/ {
-        include /etc/nginx/uwsgi_params;
-        uwsgi_pass api-taxi-front;
-    }
-
     location /users/ {
         include /etc/nginx/uwsgi_params;
         uwsgi_pass api-taxi;
-    }
-
-    location ~* ^/hails/(.+/)?_explore$ {
-        include /etc/nginx/uwsgi_params;
-        uwsgi_pass api-taxi-front;
-    }
-
-    location ~* ^/taxis/(.+)/hails/_explore$ {
-        include /etc/nginx/uwsgi_params;
-        uwsgi_pass api-taxi-front;
-    }
-
-    location ~* ^/hails/(.+/)?_map$ {
-        include /etc/nginx/uwsgi_params;
-        uwsgi_pass api-taxi-front;
     }
 
     location = /swagger.json {
@@ -154,16 +99,6 @@ server {
     location =/zupc/ {
         include /etc/nginx/uwsgi_params;
         uwsgi_pass api-taxi;
-    }
-
-    location = /stats_hails {
-        include /etc/nginx/uwsgi_params;
-        uwsgi_pass api-taxi-front;
-    }
-
-    location = /table {
-        include /etc/nginx/uwsgi_params;
-        uwsgi_pass api-taxi-front;
     }
 
     location /mymap/ {

@@ -16,6 +16,8 @@
   template:
     src: templates/api_taxi/settings.py.j2
     dest: /opt/openmaraude/api_taxi_front/settings.py
+  vars:
+    hostname: "console.{{ deploy.hostname }}"
 
 - name: Setup /opt/openmaraude/api_taxi_front/api_taxi_front.env
   template:
