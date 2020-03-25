@@ -12,6 +12,9 @@ SERVER_NAME = '{{ hostname }}'
 HOST = '{{ deploy.hostname }}'
 SERVER_NAME = '{{ deploy.hostname }}'
 {% endif %}
+
+API_TAXI_URL = 'https://{{ deploy.hostname }}'
+
 PORT = 80
 
 SECRET_KEY = '{{ deploy.api_taxi.secret_key }}'
