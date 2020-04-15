@@ -1,0 +1,54 @@
+---
+
+- name: Create directory /opt/openmaraude/minimal_operateur_server
+  file:
+    path: /opt/openmaraude/minimal_operateur_server
+    state: directory
+
+- name: Setup /opt/openmaraude/minimal_operateur_server/uwsgi.ini
+  template:
+    src: templates/minimal_operateur_server/uwsgi.ini.j2
+    dest: /opt/openmaraude/minimal_operateur_server/uwsgi.ini
+
+- name: Setup /opt/openmaraude/minimal_operateur_server/settings.py
+  template:
+    src: templates/minimal_operateur_server/settings.py.j2
+    dest: /opt/openmaraude/minimal_operateur_server/settings.py
+
+- name: Setup /opt/openmaraude/minimal_operateur_server/minimal_operateur_server.env
+  template:
+    src: templates/minimal_operateur_server/minimal_operateur_server.env.j2
+    dest: /opt/openmaraude/minimal_operateur_server/minimal_operateur_server.env
+
+- name: Setup minimal_operateur_server systemd service file
+  template:
+    src: templates/minimal_operateur_server/minimal_operateur_server.service.j2
+    dest: /etc/systemd/system/minimal_operateur_server.service
+  notify:
+    - Reload systemd
+
+- name: Setup minimal_operateur_server_worker systemd service file
+  template:
+    src: templates/minimal_operateur_server/minimal_operateur_server_worker.service.j2
+    dest: /etc/systemd/system/minimal_operateur_server_worker.service
+  notify:
+    - Reload systemd
+
+# Required to run handlers now because if file has changed, we want the new
+# file to take effect before the restart, and not after.
+- name: Reload systemd if configuration file has changed
+  meta: flush_handlers
+
+# Restart is always mandatory to pull the latest version
+- name: Enable and start (or restart) minimal_operateur_server service
+  systemd:
+    name: minimal_operateur_server
+    enabled: yes
+    state: restarted
+
+# Restart is always mandatory to pull the latest version
+- name: Enable and start (or restart) minimal_operateur_server_worker service
+  systemd:
+    name: minimal_operateur_server_worker
+    enabled: yes
+    state: restarted

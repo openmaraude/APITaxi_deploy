@@ -1,0 +1,29 @@
+#
+# This file is installed by Ansible. ** DO NOT ** edit manually.
+#
+
+[Unit]
+Description=minimal_operateur_server
+Requires=docker.service
+After=docker.service
+
+[Service]
+Restart=always
+
+EnvironmentFile=/opt/openmaraude/minimal_operateur_server/minimal_operateur_server.env
+ExecStartPre=/usr/bin/docker pull "$DOCKER_IMAGE"
+ExecStartPre=-/usr/bin/docker rm -f minimal_operateur_server
+ExecStart=/usr/bin/docker run --rm \
+                --name minimal_operateur_server \
+                --network prod \
+                -p 8627:5000 \
+                -p 8628:5007 \
+                --env-file=/opt/openmaraude/minimal_operateur_server/minimal_operateur_server.env \
+                -v /opt/openmaraude/minimal_operateur_server/uwsgi.ini:/uwsgi.ini:ro \
+                -v /opt/openmaraude/minimal_operateur_server/settings.py:/settings.py:ro \
+                "$DOCKER_IMAGE"
+
+ExecStop=/usr/bin/docker stop minimal_operateur_server
+
+[Install]
+WantedBy=multi-user.target

@@ -35,3 +35,9 @@ geofaker:
   docker:
     version: latest
     image: openmaraude/geofaker
+
+minimal_operateur_server:
+  deploy: false
+  docker:
+    version: latest
+    image: openmaraude/minimal_operateur_server

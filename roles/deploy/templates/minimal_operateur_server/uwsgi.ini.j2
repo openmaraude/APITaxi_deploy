@@ -1,0 +1,14 @@
+#
+# This file is installed by Ansible. ** DO NOT ** edit manually.
+#
+
+[uwsgi]
+
+master = true
+processes = 2
+plugin = python3
+module = minimal_operateur_server.api:app
+# The API is only used by APITaxi to send hail to neotaxi. We need to speak
+# HTTP.
+http-socket = 0.0.0.0:5000
+stats = 0.0.0.0:5007 --stats-http
