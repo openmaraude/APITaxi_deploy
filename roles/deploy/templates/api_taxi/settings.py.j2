@@ -15,6 +15,13 @@ SERVER_NAME = '{{ deploy.hostname }}'
 
 API_TAXI_URL = 'https://{{ deploy.hostname }}'
 
+{% if deploy.dev_environment %}
+INTEGRATION_ENABLED = True
+INTEGRATION_ACCOUNT_EMAIL = 'neotaxi'
+GEOTAXI_HOST = 'geotaxi'
+GEOTAXI_PORT = 8080
+{% endif %}
+
 PORT = 80
 
 SECRET_KEY = '{{ deploy.api_taxi.secret_key }}'
