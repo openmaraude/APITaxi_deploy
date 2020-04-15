@@ -35,9 +35,3 @@ geofaker:
   docker:
     version: latest
     image: openmaraude/geofaker
-
-api_taxi_tester:
-  deploy: false
-  docker:
-    version: latest
-    image: openmaraude/api_taxi_tester
