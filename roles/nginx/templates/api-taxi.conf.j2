@@ -63,32 +63,7 @@ server {
         return 302 https://console.{{ deploy.hostname }};
     }
 
-    location ~* ^/(ads|drivers|hails|taxis|vehicles)/$ {
-        include /etc/nginx/uwsgi_params;
-        uwsgi_pass api-taxi;
-    }
-
-    location ~* ^/((hails|users|taxis)/(?!(_view|delete|form|_explore|_map))[^/]+(/|/_log)?)$ {
-        include /etc/nginx/uwsgi_params;
-        uwsgi_pass api-taxi;
-    }
-
-    location ~* ^/zupc/[\d]+/_show_temp_geojson$ {
-        include /etc/nginx/uwsgi_params;
-        uwsgi_pass api-taxi;
-    }
-
-    location /waiting_time/roissy/ {
-        include /etc/nginx/uwsgi_params;
-        uwsgi_pass api-taxi;
-    }
-
-    location /users/ {
-        include /etc/nginx/uwsgi_params;
-        uwsgi_pass api-taxi;
-    }
-
-    location = /swagger.json {
+    location / {
         include /etc/nginx/uwsgi_params;
         uwsgi_pass api-taxi;
     }
@@ -96,11 +71,6 @@ server {
     location /doc/ {
         expires modified +1w;
         proxy_pass http://127.0.0.1:8881/;
-    }
-
-    location =/zupc/ {
-        include /etc/nginx/uwsgi_params;
-        uwsgi_pass api-taxi;
     }
 
     location /mymap/ {
