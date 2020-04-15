@@ -87,6 +87,8 @@ INFLUXDB_PORT = 8086
 INFLUXDB_USERNAME = '{{ influx.api_username }}'
 INFLUXDB_PASSWORD = '{{ influx.api_password }}'
 INFLUXDB_TAXIS_DB = 'taxis_prod'
+INFLUXDB_USE_UDP = False
+INFLUXDB_UDP_PORT = 0
 
 TDAGENT_ES_HOST = '{{ deploy.api_taxi.tdagent_es_host }}'
 DEFAULT_MAX_RADIUS = 6000
