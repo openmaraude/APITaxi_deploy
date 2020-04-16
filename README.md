@@ -26,12 +26,13 @@ To deploy code, run:
 
 ```
 $>  ansible-playbook -i inventory.yml deploy.yml -e '{
-        api_taxi: {deploy: true},
-        api_taxi_front: {deploy: true},
-        api_taxi_swagger: {deploy: true},
-        geotaxi: {deploy: true},
+        api_taxi: {deploy: false},
+        api_taxi_front: {deploy: false},
+        minimal_operateur_server: {deploy: false},
+        api_taxi_swagger: {deploy: false},
+        geotaxi: {deploy: false},
         geofaker: {deploy: false},
-        map: {deploy: true}
+        map: {deploy: false}
     }'
 ```
 
