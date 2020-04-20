@@ -7,7 +7,7 @@
 master = true
 processes = 2
 plugin = python3
-module = minimal_operateur_server.api:app
+module = minimal_operateur_server.api:create_app()
 # The API is only used by APITaxi to send hail to neotaxi. We need to speak
 # HTTP.
 http-socket = 0.0.0.0:5000
