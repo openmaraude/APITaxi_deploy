@@ -67,8 +67,12 @@ CELERYBEAT_SCHEDULE_FILENAME = '/tmp/statbeat_scheduler'
 
 INFLUXDB_HOST = '172.30.0.1'
 INFLUXDB_PORT = 8086
-INFLUXDB_USERNAME = '{{ influx.api_username }}'
-INFLUXDB_PASSWORD = '{{ influx.api_password }}'
+# We should use api_password instead of admin_password, but InfluxDBClient
+# attempts to create database on initialization which requires admin
+# privileges.
+# See https://github.com/btashton/flask-influxdb/issues/14
+INFLUXDB_USER = '{{ influx.admin_username }}'
+INFLUXDB_PASSWORD = '{{ influx.admin_password }}'
 INFLUXDB_TAXIS_DB = 'taxis_prod'
 INFLUXDB_USE_UDP = False
 INFLUXDB_UDP_PORT = 0
