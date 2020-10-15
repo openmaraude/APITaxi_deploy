@@ -22,7 +22,7 @@ ExecStart=/usr/bin/docker run --rm \
                 -e 'APITAXI_CONFIG_FILE=/settings.py' \
                 -e 'PYTHONUNBUFFERED=1' \
                 "$DOCKER_IMAGE" \
-                celery worker --app=celery_worker.celery -Q send_hail_now --pidfile=/tmp/celery.pid -n api_taxi_worker
+                celery --app=APITaxi2.celery_worker.celery worker --pidfile=/tmp/celery.pid -n api_taxi_worker -E
 
 ExecStop=/usr/bin/docker stop api_taxi_worker
 
