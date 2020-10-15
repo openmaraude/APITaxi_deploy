@@ -16,7 +16,7 @@ ExecStartPre=-/usr/bin/docker rm -f api_taxi_swagger
 ExecStart=/usr/bin/docker run --rm \
                 --name api_taxi_swagger \
                 --network prod \
-                -p 8881:80 \
+                -p 8881:8080 \
                 --env-file=/opt/openmaraude/api_taxi_swagger/api_taxi_swagger.env \
                 "$DOCKER_IMAGE"
 

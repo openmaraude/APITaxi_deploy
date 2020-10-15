@@ -18,12 +18,6 @@ api_taxi:
     version: latest
     image: openmaraude/api_taxi
 
-api_taxi_swagger:
-  deploy: false
-  docker:
-    version: latest
-    image: openmaraude/api_taxi_swagger
-
 map:
   deploy: false
   docker:
@@ -41,3 +35,9 @@ minimal_operateur_server:
   docker:
     version: latest
     image: openmaraude/minimal_operateur_server
+
+api_taxi_swagger:
+  deploy: false
+  docker:
+    version: latest
+    image: swaggerapi/swagger-ui
