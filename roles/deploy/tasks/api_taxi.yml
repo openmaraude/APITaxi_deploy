@@ -55,7 +55,6 @@
     - Reload systemd
   with_items:
     - api_taxi_worker
-    - api_taxi_stat_worker
     - api_taxi_beat_worker
     - celery_flower
 
@@ -79,7 +78,6 @@
   when: redis.role == 'master'
   with_items:
     - api_taxi_worker
-    - api_taxi_stat_worker
     - api_taxi_beat_worker
     - celery_flower
 
@@ -92,6 +90,5 @@
   when: redis.role == 'slave'
   with_items:
     - api_taxi_worker
-    - api_taxi_stat_worker
     - api_taxi_beat_worker
     - celery_flower
