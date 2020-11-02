@@ -38,6 +38,12 @@
     dest: /etc/nginx/sites-enabled/grafana.conf
   notify: Reload nginx
 
+- name: Setup /etc/nginx/sites-enabled/celery-flower.conf
+  template:
+    src: templates/celery-flower.conf.j2
+    dest: /etc/nginx/sites-enabled/celery-flower.conf
+  notify: Reload nginx
+
 - htpasswd:
     path: /etc/nginx/admin.passwd
     name: "{{ item.username }}"

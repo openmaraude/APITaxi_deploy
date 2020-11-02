@@ -22,7 +22,7 @@ ExecStart=/usr/bin/docker run --rm \
                 -e 'PYTHONUNBUFFERED=1' \
                 -p 5555:5555 \
                 "$DOCKER_IMAGE" \
-                flower -A APITaxi2.celery_worker.celery --pidfile=/tmp/celery.pid --url-prefix=flower --address=0.0.0.0
+                flower -A APITaxi2.celery_worker.celery --pidfile=/tmp/celery.pid --address=0.0.0.0
 
 ExecStop=/usr/bin/docker stop celery_flower
 
