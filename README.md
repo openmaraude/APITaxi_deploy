@@ -29,7 +29,6 @@ $>  ansible-playbook -i inventory.yml deploy.yml -e '{
         api_taxi: {deploy: false},
         api_taxi_front: {deploy: false},
         minimal_operateur_server: {deploy: false},
-        api_taxi_swagger: {deploy: false},
         geotaxi: {deploy: false},
         geofaker: {deploy: false},
         map: {deploy: false}
