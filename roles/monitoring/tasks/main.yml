@@ -1,29 +1,15 @@
 ---
 
-- name: Import datadog
-  include_role:
-    name: datadog.datadog
-  vars:
+- name: Set default datadog_additional_groups
+  set_fact:
     datadog_additional_groups:
-      # Required to get containers status
-      - docker
-      # Read HTTP logs
-      - adm
-      # Read redis logs
-      - redis
+        # Required to get containers status
+        - docker
+        # Read HTTP logs
+        - adm
 
-    datadog_config:
-      # Get containers status
-      config_providers:
-        - name: docker
-          polling: true
-
-      listeners:
-        - name: docker
-
-      # logs_enabled must be send to send logs to datadog.
-      logs_enabled: true
-
+- name: Set default datadog_checks
+  set_fact:
     datadog_checks:
       nginx:
         instances: []
@@ -40,6 +26,9 @@
             source: nginx
             sourcecategory: http_web_access
 
+- name: Set datadog_redis_check
+  set_fact:
+    datadog_redis_check:
       redisdb:
         instances:
           - host: localhost
@@ -52,6 +41,37 @@
             path: /var/log/redis/redis-server.log
             source: redis
             sourcecategory: database
+  when: redis.role is defined
+
+- name: Set datadog_redis_additional_groups
+  set_fact:
+    datadog_redis_additional_groups:
+      - redis
+  when: redis.role is defined
+
+- name: Update datadog_checks with optional checks
+  set_fact:
+    datadog_checks: "{{ datadog_checks | combine(datadog_redis_check if datadog_redis_check is defined else {}) }}"
+
+- name: Update datadog_additional_groups with optional groups
+  set_fact:
+    datadog_additional_groups: "{{ datadog_additional_groups + (datadog_redis_additional_groups if datadog_redis_additional_groups is defined else []) }}"
+
+- name: Import datadog
+  include_role:
+    name: datadog.datadog
+  vars:
+    datadog_config:
+      # Get containers status
+      config_providers:
+        - name: docker
+          polling: true
+
+      listeners:
+        - name: docker
+
+      # logs_enabled must be send to send logs to datadog.
+      logs_enabled: true
 
       # By default, datadog attempts to read all mountpoints. Docker nsfs
       # mountpoints and docker volumes can't be read by dd-agent user
