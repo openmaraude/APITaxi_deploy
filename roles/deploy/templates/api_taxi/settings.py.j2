@@ -3,7 +3,6 @@
 #
 
 DEBUG = False
-ENV = 'PROD'
 
 {% if hostname is defined %}
 HOST = '{{ hostname }}'
@@ -22,51 +21,20 @@ GEOTAXI_HOST = 'geotaxi'
 GEOTAXI_PORT = 8080
 {% endif %}
 
-PORT = 80
-
 SECRET_KEY = '{{ deploy.api_taxi.secret_key }}'
+
 SQLALCHEMY_DATABASE_URI = 'postgresql://{{ deploy.api_taxi.postgresql.username }}:{{ deploy.api_taxi.postgresql.password }}@172.30.0.1:6432/taxis_prod'
+
 REDIS_URL = "redis://:{{ redis.password }}@172.30.0.1:6379/0"
-REDIS_GEOINDEX = 'geoindex_2'
-REDIS_SAVED_URL = "redis://:{{ redis.password }}@172.30.0.1:6379/0"
-SECURITY_PASSWORD_HASH = 'bcrypt'
+
 SECURITY_PASSWORD_SALT = '{{ deploy.api_taxi.security_password_salt }}'
-SECURITY_REGISTERABLE = False
-UPLOADS_DEFAULT_DEST = '/uploads'
-UPLOADS_DEFAULT_URL = '/documents/<path:filename>'
-UPLOADED_IMAGES_DEST = '/uploads/images'
-UPLOADED_DOCUMENTS_DEST = '/uploads/documents'
-UPLOADED_DOCUMENTS_URL = '/documents/<path:filename>'
-SLACK_API_KEY = '{{ deploy.api_taxi.slack_api_key }}'
-
-DOGPILE_CACHE_REGIONS = [
-    ('taxis', None,'dogpile.cache.null'),
-    ('hails', None, 'dogpile.cache.null'),
-    ('taxis_zupc', None, 'dogpile.cache.null'),
-    ('zupc', None, 'dogpile.cache.memory'),
-    ('users', None, 'dogpile.cache.memory'),
-    ('taxis_cache_sql', 3600, 'dogpile.cache.redis', None,
-        {'wrap': 'APITaxi_utils.msgpack_backend.MsgpackProxy',
-        'url': 'redis://:{{ redis.password }}@172.30.0.1:6379/0'}),
-    ('zupc_lon_lat', None, 'dogpile.cache.memory'),
-    ('zupc_list', None, 'dogpile.cache.memory'),
-    ('zupc_parent_shape', None, 'dogpile.cache.memory'),
-]
-
-
-DOGPILE_CACHE_BACKEND = 'dogpile.cache.redis'
-DOGPILE_CACHE_URLS = ['redis://:{{ redis.password }}@172.30.0.1:6379/0']
-
-SQLALCHEMY_POOL_SIZE = 15
 
 CELERY_BROKER_URL = 'redis://:{{ redis.password }}@172.30.0.1:6379/0'
-CELERY_RESULT_BACKEND = None
-CELERY_IGNORE_RESULT = True
-CELERY_STORE_ERRORS_EVEN_IF_IGNORED = True
-CELERYBEAT_SCHEDULE_FILENAME = '/tmp/statbeat_scheduler'
+CELERY_RESULT_BACKEND = 'redis://:{{ redis.password }}@172.30.0.1:6379/0'
 
 INFLUXDB_HOST = '172.30.0.1'
 INFLUXDB_PORT = 8086
+
 # We should use api_password instead of admin_password, but InfluxDBClient
 # attempts to create database on initialization which requires admin
 # privileges.
@@ -76,6 +44,3 @@ INFLUXDB_PASSWORD = '{{ influx.admin_password }}'
 INFLUXDB_DATABASE = 'taxis_prod'
 INFLUXDB_USE_UDP = False
 INFLUXDB_UDP_PORT = 0
-
-TDAGENT_ES_HOST = '{{ deploy.api_taxi.tdagent_es_host }}'
-DEFAULT_MAX_RADIUS = 500
