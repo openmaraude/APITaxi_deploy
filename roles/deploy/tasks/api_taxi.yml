@@ -16,6 +16,8 @@
   template:
     src: templates/api_taxi/settings.py.j2
     dest: /opt/openmaraude/api_taxi/settings.py
+  vars:
+    sentry_dsn: "{{ deploy.api_taxi.dsn }}"
 
 - name: Setup /opt/openmaraude/api_taxi/api_taxi.env
   template:
