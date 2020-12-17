@@ -76,4 +76,10 @@ server {
     location /mymap/ {
         proxy_pass http://127.0.0.1:9999/;
     }
+
+    error_page 500 501 502 503 504 505 506 507 508 510 511 /5xx.html;
+    location = /5xx.html {
+        root /var/www/html;
+        internal;
+    }
 }

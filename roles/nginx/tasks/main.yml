@@ -8,6 +8,11 @@
       - python3-certbot-nginx
       - python3-passlib
 
+- name: Create /var/www/html/5xx.html
+  template:
+    src: templates/5xx.html
+    dest: /var/www/html/5xx.html
+
 - name: Make sure /etc/nginx/sites-enabled/default is absent
   file:
     path: /etc/nginx/sites-enabled/default
