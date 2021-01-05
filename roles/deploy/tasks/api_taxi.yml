@@ -92,3 +92,21 @@
     - api_taxi_worker
     - api_taxi_beat_worker
     - celery_flower
+
+- name: Setup /opt/openmaraude/api_taxi/send-report.sh
+  template:
+    src: templates/api_taxi/send-report.sh
+    dest: /opt/openmaraude/api_taxi/send-report.sh
+    mode: '0755'
+  when: not deploy.dev_environment and postgresql.role == 'master'
+
+# Deploy report cron only on the production environment, on master server
+- name: Send stats report
+  cron:
+    name: "Send stats report"
+    # Monday
+    weekday: "1"
+    hour: "9"
+    minute: "0"
+    job: "/opt/openmaraude/api_taxi/send-report.sh"
+  when: not deploy.dev_environment and postgresql.role == 'master'
