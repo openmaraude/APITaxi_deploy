@@ -32,12 +32,6 @@
     path: /var/lib/api_taxi
     state: directory
 
-- name: Create directory /var/lib/api_taxi/uploads
-  file:
-    path: /var/lib/api_taxi/uploads
-    state: directory
-    mode: '0777'
-
 - name: Setup systemd service file
   template:
     src: templates/api_taxi/api_taxi.service.j2
