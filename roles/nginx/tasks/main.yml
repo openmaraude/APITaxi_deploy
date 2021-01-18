@@ -49,6 +49,12 @@
     dest: /etc/nginx/sites-enabled/celery-flower.conf
   notify: Reload nginx
 
+- name: Disable server tokens
+  template:
+    src: templates/tokens.conf
+    dest: /etc/nginx/conf.d/tokens.conf
+  notify: Reload nginx
+
 - htpasswd:
     path: /etc/nginx/admin.passwd
     name: "{{ item.username }}"
