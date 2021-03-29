@@ -9,8 +9,6 @@
   template:
     src: templates/api_taxi/uwsgi.ini.j2
     dest: /opt/openmaraude/api_taxi/uwsgi.ini
-  vars:
-    python_module: APITaxi
 
 - name: Setup /opt/openmaraude/api_taxi/settings.py
   template:
@@ -34,10 +32,6 @@
   template:
     src: templates/api_taxi/api_taxi.service.j2
     dest: /etc/systemd/system/api_taxi.service
-  vars:
-    project: api_taxi
-    host_port: 8427
-    host_port_stats: 8428
   notify:
     - Reload systemd
 

@@ -1,0 +1,26 @@
+#
+# This file is installed by Ansible. ** DO NOT ** edit manually.
+#
+
+[Unit]
+Description=console
+Requires=docker.service
+After=docker.service
+
+[Service]
+Restart=always
+
+EnvironmentFile=/opt/openmaraude/console/console.env
+ExecStartPre=/usr/bin/docker pull "$DOCKER_IMAGE"
+ExecStartPre=-/usr/bin/docker rm -f console
+ExecStart=/usr/bin/docker run --rm \
+                --name console \
+                --network prod \
+                -p 8527:80 \
+                --env-file=/opt/openmaraude/console/console.env \
+                "$DOCKER_IMAGE"
+
+ExecStop=/usr/bin/docker stop console
+
+[Install]
+WantedBy=multi-user.target

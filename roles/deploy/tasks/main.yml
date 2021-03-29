@@ -6,12 +6,6 @@
     tasks_from: geotaxi
   when: geotaxi.deploy
 
-- name: Import role to deploy APITaxi_front
-  include_role:
-    name: deploy
-    tasks_from: api_taxi_front.yml
-  when: api_taxi_front.deploy
-
 - name: Import role to deploy APITaxi
   include_role:
     name: deploy
@@ -41,3 +35,9 @@
     name: deploy
     tasks_from: minimal_operateur_server
   when: deploy.dev_environment and minimal_operateur_server.deploy
+
+- name: Import role to deploy console
+  include_role:
+    name: deploy
+    tasks_from: console.yml
+  when: console.deploy

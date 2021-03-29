@@ -6,11 +6,11 @@ geotaxi:
     version: latest
     image: openmaraude/geotaxi-python
 
-api_taxi_front:
+console:
   deploy: false
   docker:
     version: latest
-    image: openmaraude/api_taxi_front
+    image: openmaraude/console
 
 api_taxi:
   deploy: false

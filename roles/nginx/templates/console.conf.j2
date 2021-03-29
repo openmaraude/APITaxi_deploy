@@ -2,10 +2,6 @@
 # This file is installed by Ansible. ** DO NOT ** edit manually.
 #
 
-upstream api-taxi-front {
-    server 127.0.0.1:8327;
-}
-
 server {
     listen 80;
     listen [::]:80;
@@ -53,17 +49,10 @@ server {
     keepalive_timeout     15 15;
     send_timeout          10;
 
-    access_log  /var/log/nginx/api-taxi-console.access.log;
-    error_log /var/log/nginx/api-taxi-console.error.log;
+    access_log  /var/log/nginx/console.access.log;
+    error_log /var/log/nginx/console.error.log;
 
     location / {
-        include /etc/nginx/uwsgi_params;
-        uwsgi_pass api-taxi-front;
-    }
-
-    error_page 500 501 502 503 504 505 506 507 508 510 511 /5xx.html;
-    location = /5xx.html {
-        root /var/www/html;
-        internal;
+        proxy_pass http://127.0.0.1:8527;
     }
 }

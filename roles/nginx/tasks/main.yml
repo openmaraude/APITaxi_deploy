@@ -31,10 +31,10 @@
     dest: /etc/nginx/sites-enabled/api-taxi.conf
   notify: Reload nginx
 
-- name: Setup /etc/nginx/sites-enabled/api-taxi-console.conf
+- name: Setup /etc/nginx/sites-enabled/console.conf
   template:
-    src: templates/api-taxi-console.conf.j2
-    dest: /etc/nginx/sites-enabled/api-taxi-console.conf
+    src: templates/console.conf.j2
+    dest: /etc/nginx/sites-enabled/console.conf
   notify: Reload nginx
 
 - name: Setup /etc/nginx/sites-enabled/grafana.conf
