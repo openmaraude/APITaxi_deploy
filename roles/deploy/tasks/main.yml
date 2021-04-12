@@ -18,12 +18,6 @@
     tasks_from: api_taxi_swagger.yml
   when: api_taxi_swagger.deploy
 
-- name: Import role to deploy map
-  include_role:
-    name: deploy
-    tasks_from: map.yml
-  when: map.deploy
-
 - name: Import role to deploy geofaker
   include_role:
     name: deploy

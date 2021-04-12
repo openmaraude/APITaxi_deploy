@@ -31,7 +31,6 @@ $>  ansible-playbook -i inventory.yml deploy.yml -e '{
         minimal_operateur_server: {deploy: false},
         geotaxi: {deploy: false},
         geofaker: {deploy: false},
-        map: {deploy: false}
     }'
 ```
 

@@ -18,12 +18,6 @@ api_taxi:
     version: latest
     image: openmaraude/api_taxi
 
-map:
-  deploy: false
-  docker:
-    version: latest
-    image: openmaraude/map
-
 geofaker:
   deploy: false
   docker:
