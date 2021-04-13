@@ -19,7 +19,7 @@
 - stat: path=/var/lib/influxdb
   register: influxdb_directory
 
-# If not (first install), stop redis
+# If not (first install), stop influxdb
 - name: Stop influxdb
   systemd:
     name: influxdb

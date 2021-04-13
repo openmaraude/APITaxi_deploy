@@ -93,6 +93,8 @@ From the backup server taxis03, delete the target database and restore it from t
 $> ssh taxis03.api.taxi
 # Credentials are stored in inventory.yml. To check, run `ansible-vault view inventory.yml`
 #> influx -host 10.0.0.2 -username xxx -password yyy -execute 'drop database taxis_prod'
+# If you start from a fresh database, you need to create an admin user. From an influx shell:
+>> CREATE USER admin WITH PASSWORD 'password' WITH ALL PRIVILEGES;
 # Here, 10.0.0.1 is backup to restore, 10.0.0.2 is the host where to restore the backup
 #> influxd restore -portable -host 10.0.0.2:8088 /data/influx_backups/10.0.0.1/<latest backup>
 ```
