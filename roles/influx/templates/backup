@@ -12,6 +12,11 @@ import shutil
 import subprocess
 import sys
 
+try:  # Python3
+    from urllib.parse import urlparse
+except:  # Python3
+    from urlparse import urlparse
+
 
 logger = logging.getLogger(__name__)
 
@@ -26,12 +31,15 @@ def write_status(backup_path, output, ret=0):
         handle.buffer.write(output)
 
 
-def build_backup_cmdline(path, host, port, database=None):
+def build_backup_cmdline(path, host, token):
     """Return the cmdline used to backup database."""
-    cmdline = ['influxd', 'backup', '-portable', '-host', '%s:%s' % (host, port), path]
-    if database:
-        cmdline.extend(['-database', database])
-    return cmdline
+    return [
+        'influx',
+        'backup',
+        '-t', token,
+        '--host', host,
+        path
+    ]
 
 
 def remove_old_backups(host_path, max_backups):
@@ -46,14 +54,14 @@ def remove_old_backups(host_path, max_backups):
 
 def backup(args):
     now = datetime.datetime.now().strftime('%Y-%m-%d_at_%H:%M:%S')
-    host_path = os.path.join(args.backup_dir, args.host)
+    host_path = os.path.join(args.backup_dir, urlparse(args.host).hostname)
     backup_path = os.path.abspath(os.path.join(host_path, now))
 
     logger.info('Backup %s into %s ...', args.host, backup_path)
     os.makedirs(backup_path, exist_ok=True)
 
     try:
-        cmdline = build_backup_cmdline(backup_path, args.host, args.port, database=args.database)
+        cmdline = build_backup_cmdline(backup_path, args.host, args.token)
         output = subprocess.check_output(cmdline, stderr=subprocess.STDOUT)
         logger.info('done!')
         write_status(backup_path, output)
@@ -72,17 +80,14 @@ def main():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
     parser.add_argument(
-        '--host', help='Hostname to backup', required=True
+        '--host', help='Influx API URL, with port', required=True
     )
     parser.add_argument(
-        '--port', type=int, help='Metadata port', default=8088
+        '--token', help='Token used for backup', required=True
     )
     parser.add_argument(
         '--max-backups', type=int, help='Only keep this number of backups',
         default=None
-    )
-    parser.add_argument(
-        '--database', help='Database to backup'
     )
     parser.add_argument(
         '--backup-dir', help='Backup directory',

@@ -13,7 +13,7 @@
 - name: Install influxdb
   apt:
     name:
-      - influxdb
+      - influxdb2
 
 # Check if /var/lib/influxdb is a link
 - stat: path=/var/lib/influxdb
@@ -48,10 +48,10 @@
     state: started
   when: not influxdb_directory.stat.islnk
 
-- name: Create /etc/influxdb/influxdb.conf
+- name: Create /etc/influxdb/config.toml
   template:
-    src: templates/influxdb.conf.j2
-    dest: /etc/influxdb/influxdb.conf
+    src: templates/config.toml
+    dest: /etc/influxdb/config.toml
   notify: Restart influxdb
 
 - name: Create directory /data/influx_backups
@@ -75,11 +75,6 @@
     name: backup {{ item.host }}
     minute: '0'
     hour: '*/4'
-    job: '/data/influx_backups/backup --backup-dir /data/influx_backups/ --host {{ item.host }} --max-backups 64 > /dev/null 2>&1 || true'
+    job: '/data/influx_backups/backup --backup-dir /data/influx_backups/ --host {{ item.host }} --max-backups 64 --token {{ influx.admin_token }} > /dev/null 2>&1 || true'
     user: influxdb
   with_items: "{{ influx.backups }}"
-
-- name: Create users
-  include_role:
-    name: influx
-    tasks_from: bootstrap
