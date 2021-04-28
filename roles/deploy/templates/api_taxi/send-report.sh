@@ -1,3 +1,12 @@
 #!/bin/sh
 
-(/bin/echo -e 'Subject: Weekly usage report\n\n' ; /usr/bin/docker exec api_taxi flask report) | /usr/sbin/sendmail -F 'le.taxi production' -f 'prod@le.taxi' equipe@le.taxi
+CONTAINER=api_taxi
+
+/bin/echo "\
+Subject: Weekly usage report
+
+$(/usr/bin/docker exec $CONTAINER flask report)
+
+$(/usr/bin/docker exec $CONTAINER flask clean_db)
+
+" | /usr/sbin/sendmail -F 'le.taxi production' -f 'prod@le.taxi' equipe@le.taxi
